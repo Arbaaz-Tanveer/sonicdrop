@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!--CSP-->
+<title>SonicDrop</title>
+<meta name="description" content="Send files and messages between devices through sound. No internet, no pairing, no servers.">
+<meta name="theme-color" content="#07080d">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%23a78bfa'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%2307080d'/%3E%3Cpath d='M14 32h6l5-12 7 24 6-18 4 6h8' fill='none' stroke='url(%23g)' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="app/style.css">
+</head>
+<body>
+<div id="app">
+  <header class="top">
+    <button class="icon-btn back" id="backBtn" aria-label="Back" hidden>
+      <svg viewBox="0 0 24 24" width="22" height="22"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <a class="brand" href="#" id="brandLink">
+      <svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="#11131c"/><path d="M14 32h6l5-12 7 24 6-18 4 6h8" fill="none" stroke="url(#lg)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>SonicDrop</span>
+    </a>
+    <a class="byline" href="https://x.com/ArbaazTanveer" target="_blank" rel="noopener noreferrer" title="Follow the builder on X">
+      <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg><span>built by <b>@ArbaazTanveer</b></span>
+    </a>
+    <span class="pill pill-quiet" id="netPill" title="Everything happens on this device. Data travels only as sound.">
+      <span class="dot"></span>No servers · works offline
+    </span>
+  </header>
+
+  <main>
+    <!-- HOME -->
+    <section class="screen active" id="screen-home">
+      <div class="hero">
+        <h1>Send files through <span class="grad">sound</span>.</h1>
+        <p class="lead">Photos, PDFs, any file or a quick message, from one device to another over the air. No internet, no Bluetooth, no pairing, no app install.</p>
+      </div>
+      <p class="choose">What should <b>this device</b> do?</p>
+      <div class="roles">
+        <button class="role role-send" data-go="send">
+          <span class="role-ic"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="role-t">Send</span>
+          <span class="role-d">This device becomes the <b>transmitter</b>. Pick files and play them out of the speaker.</span>
+        </button>
+        <button class="role role-recv" data-go="receive">
+          <span class="role-ic"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="role-t">Receive</span>
+          <span class="role-d">This device becomes the <b>receiver</b>. It listens with the microphone and rebuilds the files.</span>
+        </button>
+        <button class="role role-test" data-go="test">
+          <span class="role-ic"><svg viewBox="0 0 24 24"><path d="M4 18a8 8 0 1 1 16 0M12 18l4-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="role-t">Speed test</span>
+          <span class="role-d">Measure the fastest speed that works between two devices in this room.</span>
+        </button>
+      </div>
+      <ol class="steps">
+        <li><b>1</b><span>On the other device open this page and tap <b>Receive</b>.</span></li>
+        <li><b>2</b><span>Here, tap <b>Send</b>, choose files and hit <b>Transmit</b>.</span></li>
+        <li><b>3</b><span>Keep the devices close. The file appears, verified, ready to download.</span></li>
+      </ol>
+      <details class="tech">
+        <summary>How does it work?</summary>
+        <div class="tech-grid">
+          <div><h4>OFDM modem</h4><p>Data rides on 629 tones between 1.1 and 15.8 kHz. Each one carries BPSK up to 16-QAM, with pilot tones that track clock drift between the two devices.</p></div>
+          <div><h4>LDPC error correction</h4><p>Modern capacity-approaching codes (the same family Wi-Fi and 5G use) recover data even when many tones are buried by echoes and noise.</p></div>
+          <div><h4>Fountain coding</h4><p>The sender streams an endless supply of coded packets. Any set equal to the file size rebuilds it, so the receiver can join late and lost bits never need a resend.</p></div>
+          <div><h4>Private by design</h4><p>Nothing touches a server. Optional AES-256-GCM encryption with a passphrase, and a SHA-256 check proves the received file is bit-exact.</p></div>
+        </div>
+      </details>
+    </section>
+
+    <!-- SEND -->
+    <section class="screen" id="screen-send">
+      <div class="screen-head">
+        <h2>Send</h2>
+        <p class="sub">This device is the <b>transmitter</b>.</p>
+      </div>
+
+      <div id="sendCompose">
+        <div class="card">
+          <div class="drop" id="drop" tabindex="0" role="button" aria-label="Choose files">
+            <input type="file" id="fileInput" multiple hidden>
+            <div class="drop-ic"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="drop-t">Drop files here or <u>choose files</u></div>
+            <div class="drop-d">Images, PDFs, documents, anything. Smaller is faster.</div>
+          </div>
+          <div id="fileList" class="file-list"></div>
+          <div class="img-opt" id="imgOpt" hidden>
+            <label>Photo size</label>
+            <div class="seg" id="imgSeg">
+              <button data-q="original">Original</button>
+              <button data-q="large">Large</button>
+              <button data-q="medium" class="on">Medium</button>
+              <button data-q="small">Small</button>
+            </div>
+          </div>
+          <div class="msg-wrap">
+            <textarea id="msgInput" rows="2" placeholder="…or type a message / paste a link to send"></textarea>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="row-head"><h3>Speed</h3><span class="muted" id="payloadInfo">Nothing selected yet</span></div>
+          <div class="modes" id="modeList"></div>
+          <p class="hint">Closer devices and quieter rooms can use faster speeds. Not sure? Run a <a href="#test">speed test</a>.</p>
+        </div>
+
+        <div class="card options">
+          <div class="opt">
+            <label for="passInput"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 11V8a5 5 0 0 1 10 0v3M5 11h14v9H5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg> Passphrase <span class="muted">(optional, encrypts with AES-256)</span></label>
+            <input type="password" id="passInput" placeholder="Leave empty to send unencrypted" autocomplete="off">
+          </div>
+          <div class="opt">
+            <label for="volInput">Volume <span class="muted" id="volVal">80%</span></label>
+            <input type="range" id="volInput" min="10" max="100" value="80">
+          </div>
+        </div>
+
+        <button class="cta" id="txBtn" disabled>
+          <svg viewBox="0 0 24 24" width="22" height="22"><path d="M5 9v6h4l5 4V5L9 9H5zM17 8a5 5 0 0 1 0 8M19.5 5.5a8.5 8.5 0 0 1 0 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Transmit
+        </button>
+      </div>
+
+      <div id="sendLive" hidden>
+        <div class="card live">
+          <div class="live-top">
+            <span class="pill pill-live"><span class="dot"></span>Transmitting</span>
+            <span class="muted" id="txWhat"></span>
+          </div>
+          <canvas id="txWaterfall" class="waterfall"></canvas>
+          <div class="stats">
+            <div class="stat"><span class="k">Air speed</span><span class="v" id="txRate">–</span></div>
+            <div class="stat"><span class="k">Elapsed</span><span class="v" id="txElapsed">0:00</span></div>
+            <div class="stat"><span class="k">Packets sent</span><span class="v" id="txPackets">0</span></div>
+            <div class="stat"><span class="k">One full pass</span><span class="v" id="txPass">–</span></div>
+          </div>
+          <div class="bar"><div class="bar-fill" id="txBar"></div></div>
+          <p class="hint" id="txHint">Receivers can start listening at any moment. Keep transmitting until the other device shows the file.</p>
+        </div>
+        <button class="cta cta-stop" id="txStop">Stop</button>
+      </div>
+    </section>
+
+    <!-- RECEIVE -->
+    <section class="screen" id="screen-receive">
+      <div class="screen-head">
+        <h2>Receive</h2>
+        <p class="sub">This device is the <b>receiver</b>.</p>
+      </div>
+
+      <div id="recvIdle">
+        <div class="card center">
+          <div class="mic-ring"><svg viewBox="0 0 24 24" width="42" height="42"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM5 11a7 7 0 0 0 14 0M12 18v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <p>Tap to start listening. Allow microphone access when asked.<br><span class="muted">Audio is processed on this device only and never leaves it.</span></p>
+          <button class="cta" id="rxBtn">Start listening</button>
+          <p class="err" id="rxErr" hidden></p>
+        </div>
+      </div>
+
+      <div id="recvLive" hidden>
+        <div class="card live">
+          <div class="live-top">
+            <span class="pill" id="rxPill"><span class="dot"></span><span id="rxState">Listening…</span></span>
+            <span class="level"><span class="level-fill" id="rxLevel"></span></span>
+          </div>
+          <canvas id="rxWaterfall" class="waterfall"></canvas>
+          <div class="stats">
+            <div class="stat"><span class="k">Live speed</span><span class="v" id="rxSpeed">–</span><canvas class="spark" id="rxSpark" width="120" height="26"></canvas></div>
+            <div class="stat"><span class="k">Signal quality</span><span class="v" id="rxSnr">–</span></div>
+            <div class="stat"><span class="k">Detected mode</span><span class="v" id="rxMode">–</span></div>
+            <div class="stat"><span class="k">Frames OK</span><span class="v" id="rxFrames">–</span></div>
+          </div>
+        </div>
+        <details class="card test-card" id="testCard" hidden>
+          <summary><span class="tc-title">Speed test</span><span class="muted" id="testProg"></span></summary>
+          <div class="test-table" id="testTable"></div>
+          <div class="reco" id="testReco" hidden></div>
+        </details>
+        <div id="transfers">
+          <div class="xfer-bar" id="xferBar" hidden>
+            <span class="muted" id="xferCount">Received on this device</span>
+            <button class="btn" id="clearAll">
+              <svg viewBox="0 0 24 24" width="15" height="15"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Clear all
+            </button>
+          </div>
+          <div id="xferList"></div>
+        </div>
+
+        <details class="card diag">
+          <summary>Signal details</summary>
+          <div class="diag-grid">
+            <div><h4>Constellation</h4><canvas id="consCanvas" width="260" height="260"></canvas></div>
+            <div><h4>Quality across frequencies</h4><canvas id="snrCanvas" width="360" height="160"></canvas>
+              <p class="muted small" id="diagText"></p>
+              <button class="btn" id="recBtn" title="Saves the last 30 seconds of raw microphone audio as a WAV file, useful for debugging a transfer that fails.">Save last 30 s of mic audio (debug)</button></div>
+          </div>
+        </details>
+        <button class="cta cta-stop" id="rxStop">Stop listening</button>
+      </div>
+    </section>
+
+    <!-- SPEED TEST -->
+    <section class="screen" id="screen-test">
+      <div class="screen-head">
+        <h2>Speed test</h2>
+        <p class="sub">Use two devices: one plays the test signal, the other measures it.</p>
+      </div>
+      <div class="roles roles-2">
+        <button class="role role-send" id="testPlayBtn">
+          <span class="role-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
+          <span class="role-t">Play test signal</span>
+          <span class="role-d" id="testPlayDesc">This device sends every speed in turn.</span>
+        </button>
+        <button class="role role-recv" id="testMeasureBtn">
+          <span class="role-ic"><svg viewBox="0 0 24 24"><path d="M4 18a8 8 0 1 1 16 0M12 18l4-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+          <span class="role-t">Measure</span>
+          <span class="role-d">This device listens and shows which speeds made it through.</span>
+        </button>
+      </div>
+      <div class="card" id="testTx" hidden>
+        <div class="live-top">
+          <span class="pill pill-live"><span class="dot"></span>Playing test signal</span>
+          <span class="muted" id="testTxWhat"></span>
+        </div>
+        <canvas id="testWaterfall" class="waterfall"></canvas>
+        <div class="test-steps" id="testSteps"></div>
+        <button class="cta cta-stop" id="testStop">Stop</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>SonicDrop · data over sound · everything runs locally</span>
+  </footer>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button class="lb-close" id="lbClose" aria-label="Close">
+    <svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+  </button>
+  <div class="lb-scroll" id="lbScroll"><img id="lbImg" alt=""></div>
+  <div class="lb-bar"><span id="lbName"></span><span class="muted small">tap image to zoom</span><a class="btn primary" id="lbDl">Download</a></div>
+</div>
+
+<!--SCRIPTS-->
+<script src="core/util.js"></script>
+<script src="core/params.js"></script>
+<script src="core/container.js"></script>
+<script src="app/app.js"></script>
+<!--/SCRIPTS-->
+</body>
+</html>

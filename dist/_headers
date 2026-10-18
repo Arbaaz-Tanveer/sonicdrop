@@ -1,0 +1,16 @@
+/*
+  Content-Security-Policy: default-src 'none'; script-src 'sha256-ED0jhFqb98V0RCT3v0eues17iWVNDHdr3ywrStY+fAI=' 'sha256-mmqUZ6uZ5ilCRHjmNZPDwfeRPDPBmlsaw8BgkrgkQM0=' 'sha256-4pN2AO7hlsGUkWyjKVB3FRbMLDz+aZLXCFLOfmnl2YE=' 'sha256-Hj00JJONnC/kUxzPwfEmyZSaJHiR6w+P070PScuV7Lc=' 'sha256-o/36QebB10VF/r5t+uNRXUOXEqMTX+a7k7fg37CKt14=' blob:; worker-src 'self' blob:; style-src 'unsafe-inline'; img-src 'self' blob: data:; media-src blob: data: mediastream:; connect-src 'none'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: no-referrer
+  Permissions-Policy: microphone=(self), camera=(), geolocation=(), payment=(), usb=(), serial=(), bluetooth=(), midi=(), browsing-topics=()
+  Cross-Origin-Opener-Policy: same-origin
+  Strict-Transport-Security: max-age=31536000
+/
+  Cache-Control: public, max-age=0, must-revalidate
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+/sw.js
+  Cache-Control: no-cache
+/og.png
+  Cache-Control: public, max-age=86400

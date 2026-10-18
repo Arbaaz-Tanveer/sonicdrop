@@ -1,0 +1,51 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>SonicDrop card</title>
+<style>
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: #07080d; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #e8ebf4; }
+  .bg { position: absolute; inset: 0; background: radial-gradient(700px 420px at 92% -5%, rgba(167,139,250,.28), transparent 60%), radial-gradient(640px 420px at -5% 110%, rgba(34,211,238,.22), transparent 60%); }
+  .wrap { position: absolute; inset: 0; padding: 70px 72px; display: flex; flex-direction: column; }
+  .brand { display: flex; align-items: center; gap: 18px; font-size: 40px; font-weight: 800; letter-spacing: -.02em; }
+  h1 { font-size: 74px; line-height: 1.04; letter-spacing: -.04em; margin: 44px 0 18px; max-width: 640px; }
+  .grad { background: linear-gradient(120deg, #22d3ee, #a78bfa); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  p { font-size: 27px; color: #9aa3b8; margin: 0; max-width: 620px; line-height: 1.35; }
+  .by { margin-top: auto; display: flex; align-items: center; gap: 10px; font-size: 24px; color: #9aa3b8; }
+  .by b { color: #e8ebf4; }
+  canvas { position: absolute; right: 60px; top: 150px; border-radius: 22px; border: 1px solid #222838; }
+  .chips { position: absolute; right: 60px; top: 510px; width: 400px; display: flex; gap: 10px; justify-content: flex-end; }
+  .chip { font-size: 18px; padding: 8px 14px; border-radius: 999px; border: 1px solid #2d3448; background: #10131d; color: #c9cfdd; }
+</style></head>
+<body>
+<div class="bg"></div>
+<canvas id="c" width="400" height="330"></canvas>
+<div class="chips"><span class="chip">OFDM</span><span class="chip">LDPC</span><span class="chip">AES-256</span></div>
+<div class="wrap">
+  <div class="brand">
+    <svg viewBox="0 0 64 64" width="64" height="64"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="#11131c"/><path d="M14 32h6l5-12 7 24 6-18 4 6h8" fill="none" stroke="url(#g)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    SonicDrop
+  </div>
+  <h1>Send files through <span class="grad">sound</span>.</h1>
+  <p>Photos, PDFs, messages, device to device over the air. No internet, no pairing, no servers.</p>
+  <div class="by"><svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>built by <b>@ArbaazTanveer</b></div>
+</div>
+<script>
+  // Stylised spectrogram: frames of OFDM data in the 1–16 kHz band, with gaps and a sync burst.
+  const c = document.getElementById('c'), g = c.getContext('2d'), W = c.width, H = c.height;
+  g.fillStyle = '#05060a'; g.fillRect(0, 0, W, H);
+  const stops = [[0, [5, 6, 10]], [0.22, [30, 27, 75]], [0.45, [124, 58, 237]], [0.7, [34, 211, 238]], [1, [240, 253, 255]]];
+  const col = (x) => { let a = 0; while (a < stops.length - 2 && x > stops[a + 1][0]) a++; const [x0, c0] = stops[a], [x1, c1] = stops[a + 1], t = (x - x0) / (x1 - x0); return c0.map((v, i) => Math.round(v + (c1[i] - v) * t)); };
+  let seed = 7; const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
+  const img = g.createImageData(W, H);
+  for (let x = 0; x < W; x++) {
+    const inGap = (x % 92) > 86, frameStart = (x % 92) < 5;
+    for (let y = 0; y < H; y++) {
+      const f = 1 - y / H;                      // 0..1 of 17.5 kHz
+      const band = f > 0.064 && f < 0.905;
+      let v = 0.08 + rnd() * 0.05;
+      if (band && !inGap) v = 0.48 + rnd() * 0.22 - (f > 0.75 ? (f - 0.75) * 1.4 : 0) + (frameStart ? 0.18 : 0);
+      const [r, gg, b] = col(Math.max(0, Math.min(1, v)));
+      const o = (y * W + x) * 4; img.data[o] = r; img.data[o + 1] = gg; img.data[o + 2] = b; img.data[o + 3] = 255;
+    }
+  }
+  g.putImageData(img, 0, 0);
+</script>
+</body></html>

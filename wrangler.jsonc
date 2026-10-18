@@ -1,0 +1,9 @@
+// Cloudflare Workers static-assets site (no server code): `node build.mjs`, then `npx wrangler deploy`.
+// Security and caching headers are in dist/_headers (written by build.mjs).
+{
+  "name": "sonicdrop",
+  "compatibility_date": "2026-10-18",
+  "assets": { "directory": "./dist" },
+  "workers_dev": true,
+  "preview_urls": false
+}

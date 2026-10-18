@@ -1,0 +1,17 @@
+{
+  "name": "SonicDrop",
+  "short_name": "SonicDrop",
+  "description": "Send files and messages between devices through sound. No internet, no pairing, no servers: everything runs in your browser.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#07080d",
+  "theme_color": "#07080d",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

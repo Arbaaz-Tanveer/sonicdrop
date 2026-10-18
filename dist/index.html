@@ -1,0 +1,1900 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-ED0jhFqb98V0RCT3v0eues17iWVNDHdr3ywrStY+fAI=' 'sha256-mmqUZ6uZ5ilCRHjmNZPDwfeRPDPBmlsaw8BgkrgkQM0=' 'sha256-4pN2AO7hlsGUkWyjKVB3FRbMLDz+aZLXCFLOfmnl2YE=' 'sha256-Hj00JJONnC/kUxzPwfEmyZSaJHiR6w+P070PScuV7Lc=' 'sha256-o/36QebB10VF/r5t+uNRXUOXEqMTX+a7k7fg37CKt14=' blob:; worker-src 'self' blob:; style-src 'unsafe-inline'; img-src 'self' blob: data:; media-src blob: data: mediastream:; connect-src 'none'; manifest-src 'self'; base-uri 'none'; form-action 'none'">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="canonical" href="https://sonicdrop.arbaazt.workers.dev/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SonicDrop: send files through sound">
+<meta property="og:description" content="Send files and messages between devices through sound. No internet, no pairing, no servers: everything runs in your browser.">
+<meta property="og:url" content="https://sonicdrop.arbaazt.workers.dev/">
+<meta property="og:image" content="https://sonicdrop.arbaazt.workers.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@ArbaazTanveer">
+<meta name="twitter:title" content="SonicDrop: send files through sound">
+<meta name="twitter:description" content="Send files and messages between devices through sound. No internet, no pairing, no servers: everything runs in your browser.">
+<meta name="twitter:image" content="https://sonicdrop.arbaazt.workers.dev/og.png">
+<title>SonicDrop</title>
+<meta name="build" content="ce8ec48871">
+<meta name="description" content="Send files and messages between devices through sound. No internet, no pairing, no servers.">
+<meta name="theme-color" content="#07080d">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%23a78bfa'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%2307080d'/%3E%3Cpath d='M14 32h6l5-12 7 24 6-18 4 6h8' fill='none' stroke='url(%23g)' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #07080d;
+  --bg2: #0c0e16;
+  --card: #10131d;
+  --card2: #151927;
+  --line: #222838;
+  --line2: #2d3448;
+  --text: #e8ebf4;
+  --muted: #8b93a8;
+  --cyan: #22d3ee;
+  --violet: #a78bfa;
+  --green: #34d399;
+  --amber: #fbbf24;
+  --red: #f87171;
+  --grad: linear-gradient(120deg, #22d3ee, #a78bfa);
+  --radius: 18px;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; background: var(--bg); color: var(--text); }
+body {
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, Inter, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  background:
+    radial-gradient(900px 500px at 85% -10%, rgba(167, 139, 250, .12), transparent 60%),
+    radial-gradient(800px 500px at -10% 10%, rgba(34, 211, 238, .10), transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
+}
+button { font: inherit; color: inherit; }
+a { color: var(--cyan); }
+#app { max-width: 880px; margin: 0 auto; padding: 0 16px calc(24px + env(safe-area-inset-bottom)); }
+
+/* header */
+.top { display: flex; align-items: center; gap: 10px; padding: 16px 0 8px; position: sticky; top: 0; z-index: 5;
+  background: linear-gradient(var(--bg) 70%, transparent); }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 19px; letter-spacing: -.01em; color: var(--text); text-decoration: none; flex: none; }
+.byline { display: inline-flex; align-items: center; gap: 6px; margin-right: auto; padding: 5px 10px; border-radius: 999px; font-size: 12.5px; color: var(--muted);
+  text-decoration: none; border: 1px solid var(--line); background: var(--card); white-space: nowrap; min-width: 0; transition: color .15s, border-color .15s; }
+.byline b { color: var(--text); font-weight: 600; }
+.byline svg { flex: none; }
+.byline span { overflow: hidden; text-overflow: ellipsis; }
+.byline:hover { color: var(--text); border-color: var(--line2); }
+@media (max-width: 380px) { .byline span { font-size: 11.5px; } .brand { font-size: 17px; } }
+.icon-btn { background: var(--card); border: 1px solid var(--line); border-radius: 12px; width: 40px; height: 40px; display: grid; place-items: center; cursor: pointer; }
+.icon-btn:hover { border-color: var(--line2); }
+.pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
+  background: var(--card); border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
+.pill-quiet { font-weight: 500; }
+.pill-live { color: var(--text); border-color: rgba(34, 211, 238, .4); }
+.pill-live .dot { background: var(--cyan); box-shadow: 0 0 12px var(--cyan); animation: pulse 1.2s infinite; }
+.pill.warn .dot { background: var(--amber); box-shadow: 0 0 12px var(--amber); }
+.pill.lock { color: var(--text); border-color: rgba(52, 211, 153, .45); }
+.pill.lock .dot { animation: pulse .8s infinite; }
+.pill.idle .dot { background: var(--muted); box-shadow: none; }
+@keyframes pulse { 50% { opacity: .35; } }
+@media (max-width: 520px) { #netPill { display: none; } }
+
+/* screens */
+.screen { display: none; animation: fade .25s ease; }
+.screen.active { display: block; }
+@keyframes fade { from { opacity: 0; transform: translateY(6px); } }
+.hero { padding: 28px 0 8px; }
+h1 { font-size: clamp(34px, 7vw, 56px); line-height: 1.05; letter-spacing: -.035em; margin: 0 0 14px; }
+.grad { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lead { color: var(--muted); font-size: 17px; max-width: 620px; margin: 0; }
+.choose { margin: 30px 0 12px; color: var(--muted); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .08em; }
+.choose b { color: var(--text); }
+.screen-head { padding: 18px 0 6px; }
+h2 { font-size: 30px; letter-spacing: -.02em; margin: 0; }
+.sub { color: var(--muted); margin: 2px 0 0; }
+h3 { margin: 0; font-size: 16px; }
+h4 { margin: 0 0 6px; font-size: 14px; }
+.muted { color: var(--muted); }
+.small { font-size: 12.5px; }
+
+/* role cards */
+.roles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.roles-2 { grid-template-columns: repeat(2, 1fr); margin-top: 14px; }
+@media (max-width: 700px) { .roles, .roles-2 { grid-template-columns: 1fr; } }
+.role { text-align: left; cursor: pointer; padding: 20px; border-radius: var(--radius); border: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--card2), var(--card)); display: grid; gap: 6px; position: relative; overflow: hidden;
+  transition: transform .15s ease, border-color .15s ease; }
+.role::after { content: ""; position: absolute; inset: auto -40% -60% auto; width: 220px; height: 220px; border-radius: 50%; opacity: .16; filter: blur(30px); }
+.role-send::after { background: var(--cyan); }
+.role-recv::after { background: var(--violet); }
+.role-test::after { background: var(--green); }
+.role:hover { transform: translateY(-2px); border-color: var(--line2); }
+.role:active { transform: translateY(0); }
+.role-ic { width: 44px; height: 44px; border-radius: 13px; display: grid; place-items: center; margin-bottom: 6px; }
+.role-ic svg { width: 24px; height: 24px; }
+.role-send .role-ic { background: rgba(34, 211, 238, .14); color: var(--cyan); }
+.role-recv .role-ic { background: rgba(167, 139, 250, .16); color: var(--violet); }
+.role-test .role-ic { background: rgba(52, 211, 153, .14); color: var(--green); }
+.role-t { font-size: 20px; font-weight: 700; letter-spacing: -.01em; }
+.role-d { color: var(--muted); font-size: 14px; }
+.role-d b { color: var(--text); font-weight: 600; }
+
+.steps { list-style: none; padding: 0; margin: 22px 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 700px) { .steps { grid-template-columns: 1fr; } }
+.steps li { display: flex; gap: 12px; align-items: flex-start; color: var(--muted); font-size: 14px; padding: 12px 14px; border: 1px dashed var(--line2); border-radius: 14px; }
+.steps li > b { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; background: var(--card2); color: var(--text); border: 1px solid var(--line2); }
+.steps li span b { color: var(--text); }
+.tech { margin: 22px 0 6px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); padding: 4px 18px; }
+.tech summary, .diag summary { cursor: pointer; padding: 12px 0; font-weight: 600; }
+.tech-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px 22px; padding-bottom: 14px; }
+@media (max-width: 600px) { .tech-grid { grid-template-columns: 1fr; } }
+.tech-grid p { color: var(--muted); font-size: 13.5px; margin: 0 0 10px; }
+
+/* cards */
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; margin-top: 14px; }
+.card.center { text-align: center; padding: 34px 18px; }
+.row-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.hint { color: var(--muted); font-size: 13px; margin: 12px 0 0; }
+
+/* drop zone + files */
+.drop { border: 1.5px dashed var(--line2); border-radius: 14px; padding: 26px 16px; text-align: center; cursor: pointer; transition: .15s; background: var(--bg2); }
+.drop:hover, .drop.over { border-color: var(--cyan); background: rgba(34, 211, 238, .05); }
+.drop-ic { color: var(--cyan); }
+.drop-ic svg { width: 34px; height: 34px; }
+.drop-t { font-weight: 600; margin-top: 4px; }
+.drop-t u { color: var(--cyan); text-underline-offset: 3px; }
+.drop-d { color: var(--muted); font-size: 13px; }
+.file-list { display: grid; gap: 8px; margin-top: 12px; }
+.file-list:empty { display: none; }
+.file { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 12px; background: var(--bg2); border: 1px solid var(--line); }
+.file .th { width: 44px; height: 44px; border-radius: 9px; flex: none; background: var(--card2) center/cover no-repeat; display: grid; place-items: center; font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+.file .meta { min-width: 0; flex: 1; }
+.file .nm { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; font-size: 14px; }
+.file .sz { color: var(--muted); font-size: 12.5px; font-family: var(--mono); }
+.file .rm { background: none; border: 0; color: var(--muted); cursor: pointer; padding: 6px; border-radius: 8px; }
+.file .rm:hover { color: var(--red); background: rgba(248, 113, 113, .08); }
+.img-opt { display: flex; align-items: center; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+.img-opt label { font-size: 13px; color: var(--muted); font-weight: 600; }
+.seg { display: inline-flex; background: var(--bg2); border: 1px solid var(--line); border-radius: 11px; padding: 3px; flex-wrap: wrap; }
+.seg button { border: 0; background: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; color: var(--muted); font-size: 13px; font-weight: 600; }
+.seg button.on { background: var(--card2); color: var(--text); box-shadow: inset 0 0 0 1px var(--line2); }
+.msg-wrap textarea { width: 100%; margin-top: 12px; resize: vertical; min-height: 46px; background: var(--bg2); color: var(--text); border: 1px solid var(--line); border-radius: 12px; padding: 11px 12px; font: inherit; }
+.msg-wrap textarea:focus, .opt input[type=password]:focus { outline: none; border-color: var(--cyan); }
+
+/* modes */
+.modes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+@media (max-width: 700px) { .modes { grid-template-columns: repeat(2, 1fr); } }
+.mode { text-align: left; padding: 11px 12px; border-radius: 13px; border: 1px solid var(--line); background: var(--bg2); cursor: pointer; display: grid; gap: 1px; position: relative; }
+.mode:hover { border-color: var(--line2); }
+.mode.on { border-color: transparent; background: linear-gradient(var(--card2), var(--card2)) padding-box, var(--grad) border-box; border: 1.5px solid transparent; }
+.mode .mn { font-weight: 700; font-size: 14px; }
+.mode .mk { font-family: var(--mono); font-size: 13px; color: var(--cyan); }
+.mode .mt { font-size: 12px; color: var(--muted); }
+.mode .mx { font-size: 11px; color: var(--muted); opacity: .8; }
+.mode .badge { display: inline-block; margin-left: 6px; vertical-align: 1px; font-size: 9.5px; font-weight: 700; padding: 1px 5px; border-radius: 5px; background: rgba(52, 211, 153, .15); color: var(--green); }
+.mode .bars { position: absolute; right: 11px; top: 13px; display: flex; gap: 2px; align-items: flex-end; }
+.mode .bars i { width: 3px; background: var(--line2); border-radius: 1px; }
+.mode .bars i.f { background: var(--cyan); }
+
+/* options */
+.options { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; }
+@media (max-width: 640px) { .options { grid-template-columns: 1fr; } }
+.opt label { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; margin-bottom: 8px; flex-wrap: wrap; }
+.opt input[type=password] { width: 100%; background: var(--bg2); color: var(--text); border: 1px solid var(--line); border-radius: 12px; padding: 11px 12px; font: inherit; }
+input[type=range] { width: 100%; accent-color: var(--cyan); }
+
+/* buttons */
+.cta { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-top: 16px; padding: 16px; border: 0; border-radius: 16px;
+  background: var(--grad); color: #061016; font-weight: 800; font-size: 17px; cursor: pointer; box-shadow: 0 10px 30px -10px rgba(34, 211, 238, .5); transition: transform .12s ease, opacity .12s; }
+.cta:hover { transform: translateY(-1px); }
+.cta:disabled { opacity: .35; cursor: not-allowed; transform: none; box-shadow: none; }
+.card.center .cta { max-width: 320px; margin: 18px auto 0; }
+.cta-stop { background: var(--card2); color: var(--text); border: 1px solid var(--line2); box-shadow: none; font-weight: 700; }
+.err { color: var(--red); font-size: 14px; }
+
+/* live */
+.live-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.wf-wrap { position: relative; }
+.wf-label { position: absolute; left: 8px; font: 10px var(--mono); color: rgba(232, 235, 244, .6); pointer-events: none; transform: translateY(-50%); }
+.wf-band { position: absolute; right: 6px; width: 3px; border-radius: 2px; background: var(--grad); opacity: .7; pointer-events: none; }
+.waterfall { width: 100%; height: 150px; display: block; image-rendering: auto; border-radius: 12px; background: #05060a; border: 1px solid var(--line); }
+@media (max-width: 640px) { .waterfall { height: 100px; } .wf-label { font-size: 9px; } }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 12px; }
+@media (max-width: 640px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { background: var(--bg2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; display: grid; gap: 2px; min-width: 0; position: relative; }
+.stat .k { font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; font-weight: 600; }
+.stat .v { font-family: var(--mono); font-size: 19px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stat .v small { font-size: 12px; color: var(--muted); font-weight: 500; }
+.spark { position: absolute; right: 8px; bottom: 8px; width: 60px; height: 22px; opacity: .9; }
+.bar { height: 8px; border-radius: 99px; background: var(--bg2); border: 1px solid var(--line); overflow: hidden; margin-top: 14px; }
+.bar-fill { height: 100%; width: 0; background: var(--grad); border-radius: 99px; transition: width .3s ease; }
+.level { width: 110px; height: 8px; border-radius: 99px; background: var(--bg2); border: 1px solid var(--line); overflow: hidden; }
+.level-fill { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--green), var(--amber), var(--red)); transition: width .1s linear; }
+.mic-ring { width: 92px; height: 92px; border-radius: 50%; margin: 0 auto 14px; display: grid; place-items: center; color: var(--violet);
+  background: radial-gradient(circle, rgba(167, 139, 250, .18), transparent 70%); border: 1px solid rgba(167, 139, 250, .35); }
+
+/* transfers */
+.xfer-head { display: flex; gap: 12px; align-items: center; }
+.xfer-ic { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; background: rgba(34, 211, 238, .12); color: var(--cyan); flex: none; }
+.xfer-ic.done { background: rgba(52, 211, 153, .14); color: var(--green); }
+.xfer-title { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.xfer-sub { color: var(--muted); font-size: 13px; font-family: var(--mono); }
+.grid-canvas { width: 100%; display: block; margin-top: 12px; border-radius: 10px; }
+.xfer-toggle { flex: none; }
+.xfer-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; }
+.xfer-bar .btn { display: inline-flex; align-items: center; gap: 6px; }
+.xfer-bar .btn:hover, .xfer-del:hover { color: var(--red); border-color: rgba(248, 113, 113, .5); }
+.xfer-del { flex: none; width: 36px; height: 36px; border-radius: 10px; color: var(--muted); }
+#xferList > .card:first-child { margin-top: 10px; }
+.xfer.compact { padding: 12px 14px; }
+.xfer.compact .grid-canvas, .xfer.compact .bar, .xfer.compact .preview-img, .xfer.compact .verified { display: none; }
+.xfer.compact .xfer-files { margin-top: 10px; }
+.xfer.compact .preview-msg { max-height: 3.2em; overflow: hidden; margin-top: 8px; padding: 8px 12px; font-size: 14px; }
+.xfer-files { display: grid; gap: 10px; margin-top: 14px; }
+.rfile { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 10px; border-radius: 12px; background: var(--bg2); border: 1px solid var(--line); }
+.rfile .th { width: 56px; height: 56px; border-radius: 10px; background: var(--card2) center/cover no-repeat; display: grid; place-items: center; font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+.rfile .acts { display: flex; gap: 6px; flex-wrap: wrap; }
+@media (max-width: 520px) { .rfile { grid-template-columns: auto 1fr; } .rfile .acts { grid-column: 1 / -1; } .rfile .acts .btn { flex: 1; text-align: center; } }
+.btn { border: 1px solid var(--line2); background: var(--card2); border-radius: 10px; padding: 8px 12px; cursor: pointer; font-weight: 600; font-size: 13px; text-decoration: none; color: var(--text); white-space: nowrap; }
+.btn.primary { background: var(--grad); color: #061016; border: 0; }
+.preview-img { width: 100%; max-height: min(420px, 45vh); object-fit: contain; border-radius: 12px; margin-top: 12px; background: #05060a; border: 1px solid var(--line); }
+.preview-msg { white-space: pre-wrap; word-break: break-word; background: var(--bg2); border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-top: 12px; font-size: 16px; }
+.verified { display: inline-flex; align-items: center; gap: 6px; color: var(--green); font-size: 12.5px; font-weight: 700; margin-top: 10px; }
+.passbox { display: flex; gap: 8px; margin-top: 12px; }
+.passbox input { flex: 1; background: var(--bg2); color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px; font: inherit; min-width: 0; }
+
+/* speed test */
+.test-table { display: grid; gap: 6px; }
+.trow { display: grid; grid-template-columns: 1.3fr .9fr 1.6fr .7fr; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 10px; background: var(--bg2); border: 1px solid var(--line); font-size: 13.5px; }
+.trow .tn { font-weight: 700; }
+.trow .tk { font-family: var(--mono); color: var(--muted); }
+.trow .tbar { height: 6px; border-radius: 9px; background: var(--card2); overflow: hidden; }
+.trow .tbar i { display: block; height: 100%; width: 0; border-radius: 9px; background: var(--green); transition: width .3s; }
+.trow .ts { text-align: right; font-family: var(--mono); font-size: 12.5px; }
+.trow.fail .tbar i { background: var(--red); }
+.trow.part .tbar i { background: var(--amber); }
+.trow.cur { border-color: var(--cyan); }
+.reco { margin-top: 14px; padding: 14px; border-radius: 14px; background: rgba(52, 211, 153, .08); border: 1px solid rgba(52, 211, 153, .35); }
+.reco b { color: var(--green); }
+.test-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 12px; }
+@media (max-width: 600px) { .test-steps { grid-template-columns: repeat(2, 1fr); } }
+.tstep { padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg2); font-size: 13px; color: var(--muted); }
+.tstep.cur { border-color: var(--cyan); color: var(--text); }
+.tstep.done { color: var(--text); opacity: .6; }
+
+/* diagnostics */
+.diag { padding-top: 4px; }
+.test-card { padding-top: 4px; padding-bottom: 4px; }
+.test-card[open] { padding-bottom: 16px; }
+.test-card summary { list-style: none; display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px 0; font-weight: 600; min-width: 0; }
+.test-card summary::-webkit-details-marker { display: none; }
+.test-card summary::after { content: '▾'; margin-left: auto; color: var(--muted); flex: none; }
+.test-card[open] summary::after { content: '▴'; }
+.test-card #testProg { font-weight: 500; font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.test-card #testProg b { color: var(--green); }
+@media (max-width: 640px) {
+  .live { padding: 14px; }
+  .live .stats { gap: 8px; margin-top: 10px; }
+  .live .stat { padding: 8px 10px; }
+  .live .stat .k { font-size: 10.5px; }
+  .live .stat .v { font-size: 16px; }
+  .live .spark { width: 48px; height: 18px; bottom: 6px; }
+  .trow { grid-template-columns: 1fr .8fr 1.4fr; font-size: 13px; }
+  .trow .tbar { display: none; }
+}
+.diag-grid { display: grid; grid-template-columns: auto 1fr; gap: 18px; padding-bottom: 6px; }
+@media (max-width: 640px) { .diag-grid { grid-template-columns: 1fr; } }
+#consCanvas { width: 260px; height: 260px; max-width: 100%; border-radius: 12px; background: #05060a; border: 1px solid var(--line); }
+#snrCanvas { width: 100%; height: 160px; border-radius: 12px; background: #05060a; border: 1px solid var(--line); }
+
+.foot { text-align: center; color: var(--muted); font-size: 12.5px; padding: 30px 0 10px; opacity: .7; }
+.zoomable { cursor: zoom-in; }
+.lightbox { position: fixed; inset: 0; z-index: 40; background: rgba(3, 4, 8, .97); display: flex; flex-direction: column; animation: fade .15s ease; }
+.lb-scroll { flex: 1; min-height: 0; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 12px; }
+.lb-scroll img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; cursor: zoom-in; touch-action: pinch-zoom; }
+.lightbox.zoomed .lb-scroll { display: block; padding: 0; }
+.lightbox.zoomed .lb-scroll img { max-width: none; max-height: none; border-radius: 0; cursor: zoom-out; }
+.lb-close { position: absolute; top: calc(12px + env(safe-area-inset-top)); right: 12px; z-index: 2; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line2); background: rgba(16, 19, 29, .85); color: var(--text); display: grid; place-items: center; cursor: pointer; }
+.lb-bar { display: flex; align-items: center; gap: 12px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: rgba(12, 14, 22, .9); }
+.lb-bar #lbName { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1; }
+.lb-bar .muted { white-space: nowrap; }
+@media (max-width: 520px) { .lb-bar .muted { display: none; } }
+.toast { position: fixed; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom)); transform: translateX(-50%); background: var(--card2); border: 1px solid var(--line2);
+  padding: 10px 16px; border-radius: 12px; font-size: 14px; z-index: 20; box-shadow: 0 10px 30px rgba(0, 0, 0, .5); max-width: calc(100% - 32px); }
+
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="top">
+    <button class="icon-btn back" id="backBtn" aria-label="Back" hidden>
+      <svg viewBox="0 0 24 24" width="22" height="22"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <a class="brand" href="#" id="brandLink">
+      <svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="#11131c"/><path d="M14 32h6l5-12 7 24 6-18 4 6h8" fill="none" stroke="url(#lg)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>SonicDrop</span>
+    </a>
+    <a class="byline" href="https://x.com/ArbaazTanveer" target="_blank" rel="noopener noreferrer" title="Follow the builder on X">
+      <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg><span>built by <b>@ArbaazTanveer</b></span>
+    </a>
+    <span class="pill pill-quiet" id="netPill" title="Everything happens on this device. Data travels only as sound.">
+      <span class="dot"></span>No servers · works offline
+    </span>
+  </header>
+
+  <main>
+    <!-- HOME -->
+    <section class="screen active" id="screen-home">
+      <div class="hero">
+        <h1>Send files through <span class="grad">sound</span>.</h1>
+        <p class="lead">Photos, PDFs, any file or a quick message, from one device to another over the air. No internet, no Bluetooth, no pairing, no app install.</p>
+      </div>
+      <p class="choose">What should <b>this device</b> do?</p>
+      <div class="roles">
+        <button class="role role-send" data-go="send">
+          <span class="role-ic"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="role-t">Send</span>
+          <span class="role-d">This device becomes the <b>transmitter</b>. Pick files and play them out of the speaker.</span>
+        </button>
+        <button class="role role-recv" data-go="receive">
+          <span class="role-ic"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="role-t">Receive</span>
+          <span class="role-d">This device becomes the <b>receiver</b>. It listens with the microphone and rebuilds the files.</span>
+        </button>
+        <button class="role role-test" data-go="test">
+          <span class="role-ic"><svg viewBox="0 0 24 24"><path d="M4 18a8 8 0 1 1 16 0M12 18l4-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="role-t">Speed test</span>
+          <span class="role-d">Measure the fastest speed that works between two devices in this room.</span>
+        </button>
+      </div>
+      <ol class="steps">
+        <li><b>1</b><span>On the other device open this page and tap <b>Receive</b>.</span></li>
+        <li><b>2</b><span>Here, tap <b>Send</b>, choose files and hit <b>Transmit</b>.</span></li>
+        <li><b>3</b><span>Keep the devices close. The file appears, verified, ready to download.</span></li>
+      </ol>
+      <details class="tech">
+        <summary>How does it work?</summary>
+        <div class="tech-grid">
+          <div><h4>OFDM modem</h4><p>Data rides on 629 tones between 1.1 and 15.8 kHz. Each one carries BPSK up to 16-QAM, with pilot tones that track clock drift between the two devices.</p></div>
+          <div><h4>LDPC error correction</h4><p>Modern capacity-approaching codes (the same family Wi-Fi and 5G use) recover data even when many tones are buried by echoes and noise.</p></div>
+          <div><h4>Fountain coding</h4><p>The sender streams an endless supply of coded packets. Any set equal to the file size rebuilds it, so the receiver can join late and lost bits never need a resend.</p></div>
+          <div><h4>Private by design</h4><p>Nothing touches a server. Optional AES-256-GCM encryption with a passphrase, and a SHA-256 check proves the received file is bit-exact.</p></div>
+        </div>
+      </details>
+    </section>
+
+    <!-- SEND -->
+    <section class="screen" id="screen-send">
+      <div class="screen-head">
+        <h2>Send</h2>
+        <p class="sub">This device is the <b>transmitter</b>.</p>
+      </div>
+
+      <div id="sendCompose">
+        <div class="card">
+          <div class="drop" id="drop" tabindex="0" role="button" aria-label="Choose files">
+            <input type="file" id="fileInput" multiple hidden>
+            <div class="drop-ic"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="drop-t">Drop files here or <u>choose files</u></div>
+            <div class="drop-d">Images, PDFs, documents, anything. Smaller is faster.</div>
+          </div>
+          <div id="fileList" class="file-list"></div>
+          <div class="img-opt" id="imgOpt" hidden>
+            <label>Photo size</label>
+            <div class="seg" id="imgSeg">
+              <button data-q="original">Original</button>
+              <button data-q="large">Large</button>
+              <button data-q="medium" class="on">Medium</button>
+              <button data-q="small">Small</button>
+            </div>
+          </div>
+          <div class="msg-wrap">
+            <textarea id="msgInput" rows="2" placeholder="…or type a message / paste a link to send"></textarea>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="row-head"><h3>Speed</h3><span class="muted" id="payloadInfo">Nothing selected yet</span></div>
+          <div class="modes" id="modeList"></div>
+          <p class="hint">Closer devices and quieter rooms can use faster speeds. Not sure? Run a <a href="#test">speed test</a>.</p>
+        </div>
+
+        <div class="card options">
+          <div class="opt">
+            <label for="passInput"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 11V8a5 5 0 0 1 10 0v3M5 11h14v9H5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg> Passphrase <span class="muted">(optional, encrypts with AES-256)</span></label>
+            <input type="password" id="passInput" placeholder="Leave empty to send unencrypted" autocomplete="off">
+          </div>
+          <div class="opt">
+            <label for="volInput">Volume <span class="muted" id="volVal">80%</span></label>
+            <input type="range" id="volInput" min="10" max="100" value="80">
+          </div>
+        </div>
+
+        <button class="cta" id="txBtn" disabled>
+          <svg viewBox="0 0 24 24" width="22" height="22"><path d="M5 9v6h4l5 4V5L9 9H5zM17 8a5 5 0 0 1 0 8M19.5 5.5a8.5 8.5 0 0 1 0 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Transmit
+        </button>
+      </div>
+
+      <div id="sendLive" hidden>
+        <div class="card live">
+          <div class="live-top">
+            <span class="pill pill-live"><span class="dot"></span>Transmitting</span>
+            <span class="muted" id="txWhat"></span>
+          </div>
+          <canvas id="txWaterfall" class="waterfall"></canvas>
+          <div class="stats">
+            <div class="stat"><span class="k">Air speed</span><span class="v" id="txRate">–</span></div>
+            <div class="stat"><span class="k">Elapsed</span><span class="v" id="txElapsed">0:00</span></div>
+            <div class="stat"><span class="k">Packets sent</span><span class="v" id="txPackets">0</span></div>
+            <div class="stat"><span class="k">One full pass</span><span class="v" id="txPass">–</span></div>
+          </div>
+          <div class="bar"><div class="bar-fill" id="txBar"></div></div>
+          <p class="hint" id="txHint">Receivers can start listening at any moment. Keep transmitting until the other device shows the file.</p>
+        </div>
+        <button class="cta cta-stop" id="txStop">Stop</button>
+      </div>
+    </section>
+
+    <!-- RECEIVE -->
+    <section class="screen" id="screen-receive">
+      <div class="screen-head">
+        <h2>Receive</h2>
+        <p class="sub">This device is the <b>receiver</b>.</p>
+      </div>
+
+      <div id="recvIdle">
+        <div class="card center">
+          <div class="mic-ring"><svg viewBox="0 0 24 24" width="42" height="42"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM5 11a7 7 0 0 0 14 0M12 18v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <p>Tap to start listening. Allow microphone access when asked.<br><span class="muted">Audio is processed on this device only and never leaves it.</span></p>
+          <button class="cta" id="rxBtn">Start listening</button>
+          <p class="err" id="rxErr" hidden></p>
+        </div>
+      </div>
+
+      <div id="recvLive" hidden>
+        <div class="card live">
+          <div class="live-top">
+            <span class="pill" id="rxPill"><span class="dot"></span><span id="rxState">Listening…</span></span>
+            <span class="level"><span class="level-fill" id="rxLevel"></span></span>
+          </div>
+          <canvas id="rxWaterfall" class="waterfall"></canvas>
+          <div class="stats">
+            <div class="stat"><span class="k">Live speed</span><span class="v" id="rxSpeed">–</span><canvas class="spark" id="rxSpark" width="120" height="26"></canvas></div>
+            <div class="stat"><span class="k">Signal quality</span><span class="v" id="rxSnr">–</span></div>
+            <div class="stat"><span class="k">Detected mode</span><span class="v" id="rxMode">–</span></div>
+            <div class="stat"><span class="k">Frames OK</span><span class="v" id="rxFrames">–</span></div>
+          </div>
+        </div>
+        <details class="card test-card" id="testCard" hidden>
+          <summary><span class="tc-title">Speed test</span><span class="muted" id="testProg"></span></summary>
+          <div class="test-table" id="testTable"></div>
+          <div class="reco" id="testReco" hidden></div>
+        </details>
+        <div id="transfers">
+          <div class="xfer-bar" id="xferBar" hidden>
+            <span class="muted" id="xferCount">Received on this device</span>
+            <button class="btn" id="clearAll">
+              <svg viewBox="0 0 24 24" width="15" height="15"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Clear all
+            </button>
+          </div>
+          <div id="xferList"></div>
+        </div>
+
+        <details class="card diag">
+          <summary>Signal details</summary>
+          <div class="diag-grid">
+            <div><h4>Constellation</h4><canvas id="consCanvas" width="260" height="260"></canvas></div>
+            <div><h4>Quality across frequencies</h4><canvas id="snrCanvas" width="360" height="160"></canvas>
+              <p class="muted small" id="diagText"></p>
+              <button class="btn" id="recBtn" title="Saves the last 30 seconds of raw microphone audio as a WAV file, useful for debugging a transfer that fails.">Save last 30 s of mic audio (debug)</button></div>
+          </div>
+        </details>
+        <button class="cta cta-stop" id="rxStop">Stop listening</button>
+      </div>
+    </section>
+
+    <!-- SPEED TEST -->
+    <section class="screen" id="screen-test">
+      <div class="screen-head">
+        <h2>Speed test</h2>
+        <p class="sub">Use two devices: one plays the test signal, the other measures it.</p>
+      </div>
+      <div class="roles roles-2">
+        <button class="role role-send" id="testPlayBtn">
+          <span class="role-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
+          <span class="role-t">Play test signal</span>
+          <span class="role-d" id="testPlayDesc">This device sends every speed in turn.</span>
+        </button>
+        <button class="role role-recv" id="testMeasureBtn">
+          <span class="role-ic"><svg viewBox="0 0 24 24"><path d="M4 18a8 8 0 1 1 16 0M12 18l4-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+          <span class="role-t">Measure</span>
+          <span class="role-d">This device listens and shows which speeds made it through.</span>
+        </button>
+      </div>
+      <div class="card" id="testTx" hidden>
+        <div class="live-top">
+          <span class="pill pill-live"><span class="dot"></span>Playing test signal</span>
+          <span class="muted" id="testTxWhat"></span>
+        </div>
+        <canvas id="testWaterfall" class="waterfall"></canvas>
+        <div class="test-steps" id="testSteps"></div>
+        <button class="cta cta-stop" id="testStop">Stop</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>SonicDrop · data over sound · everything runs locally</span>
+  </footer>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button class="lb-close" id="lbClose" aria-label="Close">
+    <svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+  </button>
+  <div class="lb-scroll" id="lbScroll"><img id="lbImg" alt=""></div>
+  <div class="lb-bar"><span id="lbName"></span><span class="muted small">tap image to zoom</span><a class="btn primary" id="lbDl">Download</a></div>
+</div>
+
+<script>
+window.SD_BUNDLE = { worker: "// SonicDrop core: shared helpers (PRNG, hashing, CRC, bit packing).\n// Classic script: attaches to globalThis.SD so it runs in pages, workers and Node.\n(function (SD) {\n  'use strict';\n\n  // Deterministic 32-bit PRNG (mulberry32). Same sequence on every platform.\n  function rng(seed) {\n    let a = seed >>> 0;\n    return function () {\n      a = (a + 0x6D2B79F5) | 0;\n      let t = Math.imul(a ^ (a >>> 15), 1 | a);\n      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;\n      return (t ^ (t >>> 14)) >>> 0;\n    };\n  }\n\n  // Mix several integers into one 32-bit seed.\n  function hash32() {\n    let h = 0x811C9DC5 | 0;\n    for (let i = 0; i < arguments.length; i++) {\n      let v = arguments[i] >>> 0;\n      for (let b = 0; b < 4; b++) {\n        h ^= v & 0xFF;\n        h = Math.imul(h, 0x01000193);\n        v >>>= 8;\n      }\n    }\n    h ^= h >>> 16; h = Math.imul(h, 0x85EBCA6B);\n    h ^= h >>> 13; h = Math.imul(h, 0xC2B2AE35);\n    h ^= h >>> 16;\n    return h >>> 0;\n  }\n\n  // Fisher-Yates permutation of 0..n-1 from a seed.\n  function permutation(n, seed) {\n    const p = new Uint32Array(n);\n    for (let i = 0; i < n; i++) p[i] = i;\n    const r = rng(seed);\n    for (let i = n - 1; i > 0; i--) {\n      const j = r() % (i + 1);\n      const t = p[i]; p[i] = p[j]; p[j] = t;\n    }\n    return p;\n  }\n\n  // Pseudo-random bit sequence (0/1 bytes).\n  function pnBits(n, seed) {\n    const out = new Uint8Array(n);\n    const r = rng(seed);\n    let word = 0;\n    for (let i = 0; i < n; i++) {\n      if ((i & 31) === 0) word = r();\n      out[i] = (word >>> (i & 31)) & 1;\n    }\n    return out;\n  }\n\n  const CRC32_TABLE = (function () {\n    const t = new Uint32Array(256);\n    for (let i = 0; i < 256; i++) {\n      let c = i;\n      for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1;\n      t[i] = c >>> 0;\n    }\n    return t;\n  })();\n\n  function crc32(bytes, init) {\n    let c = (init === undefined ? 0xFFFFFFFF : init) >>> 0;\n    for (let i = 0; i < bytes.length; i++) c = CRC32_TABLE[(c ^ bytes[i]) & 0xFF] ^ (c >>> 8);\n    return c >>> 0;\n  }\n\n  function crc16(bytes, len) {\n    let c = 0xFFFF;\n    const n = len === undefined ? bytes.length : len;\n    for (let i = 0; i < n; i++) {\n      c ^= bytes[i] << 8;\n      for (let k = 0; k < 8; k++) c = c & 0x8000 ? ((c << 1) ^ 0x1021) & 0xFFFF : (c << 1) & 0xFFFF;\n    }\n    return c;\n  }\n\n  // Bytes -> bits (MSB first), one bit per Uint8.\n  function bytesToBits(bytes, out, offset) {\n    const n = bytes.length * 8;\n    out = out || new Uint8Array(n);\n    offset = offset || 0;\n    for (let i = 0; i < bytes.length; i++) {\n      const b = bytes[i];\n      for (let k = 0; k < 8; k++) out[offset + i * 8 + k] = (b >>> (7 - k)) & 1;\n    }\n    return out;\n  }\n\n  function bitsToBytes(bits, nBytes, offset) {\n    offset = offset || 0;\n    const out = new Uint8Array(nBytes);\n    for (let i = 0; i < nBytes; i++) {\n      let b = 0;\n      for (let k = 0; k < 8; k++) b = (b << 1) | (bits[offset + i * 8 + k] & 1);\n      out[i] = b;\n    }\n    return out;\n  }\n\n  SD.util = { rng, hash32, permutation, pnBits, crc32, crc16, bytesToBits, bitsToBytes };\n})(globalThis.SD = globalThis.SD || {});\n\n;\n// Radix-2 complex FFT, in place on separate real/imag Float64Arrays.\n(function (SD) {\n  'use strict';\n\n  const cache = new Map();\n\n  class FFT {\n    constructor(n) {\n      if (n & (n - 1)) throw new Error('FFT size must be a power of two');\n      this.n = n;\n      this.cos = new Float64Array(n >> 1);\n      this.sin = new Float64Array(n >> 1);\n      for (let i = 0; i < n >> 1; i++) {\n        this.cos[i] = Math.cos((2 * Math.PI * i) / n);\n        this.sin[i] = Math.sin((2 * Math.PI * i) / n);\n      }\n      this.rev = new Uint32Array(n);\n      const bits = Math.log2(n);\n      for (let i = 0; i < n; i++) {\n        let r = 0;\n        for (let b = 0; b < bits; b++) r |= ((i >>> b) & 1) << (bits - 1 - b);\n        this.rev[i] = r;\n      }\n    }\n\n    static get(n) {\n      let f = cache.get(n);\n      if (!f) { f = new FFT(n); cache.set(n, f); }\n      return f;\n    }\n\n    // Forward: X[k] = sum x[n] e^{-j2πkn/N}. Inverse has no 1/N scaling.\n    transform(re, im, inverse) {\n      const n = this.n, rev = this.rev, cs = this.cos, sn = this.sin;\n      for (let i = 0; i < n; i++) {\n        const j = rev[i];\n        if (j > i) {\n          let t = re[i]; re[i] = re[j]; re[j] = t;\n          t = im[i]; im[i] = im[j]; im[j] = t;\n        }\n      }\n      const sg = inverse ? -1 : 1;\n      for (let size = 2; size <= n; size <<= 1) {\n        const half = size >> 1, step = n / size;\n        for (let i = 0; i < n; i += size) {\n          for (let j = i, k = 0; j < i + half; j++, k += step) {\n            const l = j + half;\n            const c = cs[k], s = sg * sn[k];\n            const tre = re[l] * c + im[l] * s;\n            const tim = im[l] * c - re[l] * s;\n            re[l] = re[j] - tre; im[l] = im[j] - tim;\n            re[j] += tre; im[j] += tim;\n          }\n        }\n      }\n    }\n  }\n\n  SD.FFT = FFT;\n})(globalThis.SD = globalThis.SD || {});\n\n;\n// LDPC codes with an IRA (irregular repeat-accumulate) structure:\n//   H = [ H_info | dual-diagonal ]  -> linear-time encoding, no generator matrix.\n// The parity-check matrix is built deterministically from a seed, so the\n// sender and receiver construct the identical code with no data exchanged.\n// Decoding: layered normalized min-sum with early termination.\n(function (SD) {\n  'use strict';\n  const { rng } = SD.util;\n\n  class LDPC {\n    // degrees: array of [fraction, degree] for info bits, e.g. [[1, 3]].\n    constructor(n, k, seed, degrees) {\n      this.n = n; this.k = k; this.m = n - k;\n      const m = this.m;\n      const r = rng(seed);\n\n      // Per-info-bit degree.\n      const deg = new Uint8Array(k);\n      let pos = 0;\n      degrees.forEach(([frac, d], i) => {\n        const cnt = i === degrees.length - 1 ? k - pos : Math.round(frac * k);\n        for (let j = 0; j < cnt && pos < k; j++) deg[pos++] = d;\n      });\n      // Shuffle degrees so high-degree bits are spread over the codeword.\n      for (let i = k - 1; i > 0; i--) { const j = r() % (i + 1); const t = deg[i]; deg[i] = deg[j]; deg[j] = t; }\n\n      let E = 0;\n      for (let j = 0; j < k; j++) E += deg[j];\n\n      // Socket pool: each check appears ~E/m times.\n      const pool = new Uint32Array(E);\n      for (let e = 0; e < E; e++) pool[e] = e % m;\n      for (let i = E - 1; i > 0; i--) { const j = r() % (i + 1); const t = pool[i]; pool[i] = pool[j]; pool[j] = t; }\n\n      const checkVars = Array.from({ length: m }, () => []);\n      const varChecks = Array.from({ length: k }, () => []);\n      const mark = new Int32Array(k).fill(-1);\n      let p = 0;\n      for (let j = 0; j < k; j++) {\n        const S = varChecks[j];\n        for (let d = 0; d < deg[j]; d++) {\n          let chosen = -1;\n          for (let tries = 0; tries < 60 && p + tries < E; tries++) {\n            const idx = tries === 0 ? p : p + (r() % (E - p));\n            const c = pool[idx];\n            if (!this._ok(c, S, checkVars, mark, j, true)) continue;\n            // swap into position p\n            const t = pool[p]; pool[p] = pool[idx]; pool[idx] = t;\n            chosen = c; break;\n          }\n          if (chosen < 0) {\n            // Relax the 4-cycle rule; still forbid duplicate/adjacent checks.\n            for (let tries = 0; tries < 400; tries++) {\n              const c = p < E && tries < 200 ? pool[p + (r() % (E - p))] : r() % m;\n              if (this._ok(c, S, checkVars, mark, j, false)) { chosen = c; break; }\n            }\n            if (chosen < 0) throw new Error('LDPC construction failed');\n          }\n          p++;\n          S.push(chosen);\n          for (const v of checkVars[chosen]) mark[v] = j;\n          checkVars[chosen].push(j);\n        }\n      }\n\n      // CSR rows: info vars then parity vars (dual diagonal).\n      const rowStart = new Uint32Array(m + 1);\n      let total = 0;\n      for (let c = 0; c < m; c++) { rowStart[c] = total; total += checkVars[c].length + (c === 0 ? 1 : 2); }\n      rowStart[m] = total;\n      const col = new Uint32Array(total);\n      for (let c = 0; c < m; c++) {\n        let e = rowStart[c];\n        for (const v of checkVars[c]) col[e++] = v;\n        col[e++] = k + c;\n        if (c > 0) col[e++] = k + c - 1;\n      }\n      this.rowStart = rowStart; this.col = col; this.edges = total;\n      this.checkInfo = checkVars.map((a) => Uint32Array.from(a));\n      this.maxRow = 0;\n      for (let c = 0; c < m; c++) this.maxRow = Math.max(this.maxRow, rowStart[c + 1] - rowStart[c]);\n      this._R = new Float32Array(total);\n      this._L = new Float32Array(n);\n      this._Q = new Float32Array(this.maxRow);\n    }\n\n    _ok(c, S, checkVars, mark, j, strict) {\n      for (let i = 0; i < S.length; i++) {\n        const s = S[i];\n        if (s === c || s === c + 1 || s === c - 1) return false;\n      }\n      if (strict) {\n        const vs = checkVars[c];\n        for (let i = 0; i < vs.length; i++) if (mark[vs[i]] === j) return false;\n      }\n      return true;\n    }\n\n    // info: Uint8Array(k) of 0/1 -> codeword Uint8Array(n)\n    encode(info, out) {\n      const k = this.k, m = this.m;\n      out = out || new Uint8Array(this.n);\n      out.set(info.subarray(0, k), 0);\n      let prev = 0;\n      for (let c = 0; c < m; c++) {\n        const vs = this.checkInfo[c];\n        let s = 0;\n        for (let i = 0; i < vs.length; i++) s ^= info[vs[i]];\n        prev ^= s;\n        out[k + c] = prev;\n      }\n      return out;\n    }\n\n    // llr: Float32Array(n), positive => bit 0. Returns {ok, iters, bits (n hard bits)}.\n    decode(llr, maxIter, alpha) {\n      maxIter = maxIter || 30;\n      alpha = alpha || 0.78;\n      const { m, rowStart, col } = this;\n      const R = this._R, L = this._L, Q = this._Q;\n      R.fill(0);\n      L.set(llr);\n      let iter = 0, ok = false;\n      for (iter = 1; iter <= maxIter; iter++) {\n        for (let c = 0; c < m; c++) {\n          const s0 = rowStart[c], s1 = rowStart[c + 1];\n          let min1 = Infinity, min2 = Infinity, minIdx = -1, sgn = 0;\n          for (let e = s0; e < s1; e++) {\n            const q = L[col[e]] - R[e];\n            Q[e - s0] = q;\n            const a = q < 0 ? -q : q;\n            if (q < 0) sgn ^= 1;\n            if (a < min1) { min2 = min1; min1 = a; minIdx = e; } else if (a < min2) min2 = a;\n          }\n          const m1 = alpha * min1, m2 = alpha * min2;\n          for (let e = s0; e < s1; e++) {\n            const q = Q[e - s0];\n            let mag = e === minIdx ? m2 : m1;\n            const neg = sgn ^ (q < 0 ? 1 : 0);\n            const rn = neg ? -mag : mag;\n            R[e] = rn;\n            L[col[e]] = q + rn;\n          }\n        }\n        // Syndrome check.\n        ok = true;\n        for (let c = 0; c < m && ok; c++) {\n          let par = 0;\n          for (let e = rowStart[c]; e < rowStart[c + 1]; e++) par ^= L[col[e]] < 0 ? 1 : 0;\n          if (par) ok = false;\n        }\n        if (ok) break;\n      }\n      const bits = new Uint8Array(this.n);\n      for (let i = 0; i < this.n; i++) bits[i] = L[i] < 0 ? 1 : 0;\n      return { ok, iters: Math.min(iter, maxIter), bits };\n    }\n  }\n\n  // Code cache keyed by (n, k): built once, identical everywhere.\n  const codes = new Map();\n  function getCode(n, k) {\n    const key = n + ':' + k;\n    let c = codes.get(key);\n    if (!c) {\n      const rate = k / n;\n      // Degree profiles tuned empirically for these block lengths (see test/ldpc-bench).\n      let deg;\n      if (rate <= 0.3) deg = [[1, 6]];\n      else if (rate <= 0.55) deg = [[1, 4]];\n      else if (rate <= 0.8) deg = [[0.8, 3], [0.2, 8]];\n      else deg = [[1, 4]];\n      c = new LDPC(n, k, SD.util.hash32(n, k, 0x5D0C), deg);\n      codes.set(key, c);\n    }\n    return c;\n  }\n\n  SD.LDPC = LDPC;\n  SD.getCode = getCode;\n})(globalThis.SD = globalThis.SD || {});\n\n;\n// OFDM numerology and speed modes. Both ends derive everything from this table.\n(function (SD) {\n  'use strict';\n\n  const O = globalThis.SD_PARAM_OVERRIDES || {};   // test hook (e.g. try other cyclic prefixes)\n  const P = {\n    version: O.legacy ? 1 : 2,   // 2 = interleaved header + slot-local payload interleaver\n    legacy: !!O.legacy,\n    fs: 48000,       // internal sample rate (resampled on capture if the device differs)\n    N: 2048,         // FFT size  -> 23.4375 Hz subcarrier spacing\n    CP: O.CP || 768, // cyclic prefix (16 ms): absorbs room echoes (measured rooms reflect up to ~13 ms)\n    W: 64,           // raised-cosine overlap between symbols (no clicks, less splatter)\n    GAP: 480,        // silence after each frame so reverb decays before the next sync\n    k0: 48,          // first used subcarrier (1125 Hz)\n    U: 629,          // used subcarriers (1125 Hz .. 15844 Hz)\n    pilotSpacing: 12,\n    D: 576,          // data subcarriers per symbol\n    ldpcN: 2304,\n    hdrN: 576, hdrK: 144,\n    delta: 48,       // FFT window back-off into the cyclic prefix\n    preamble: 3,     // sync + train + header symbols\n  };\n  P.symLen = P.N + P.CP;\n\n  const pilotIdx = [], dataIdx = [];\n  for (let i = 0; i < P.U; i++) (i % P.pilotSpacing === 0 ? pilotIdx : dataIdx).push(i);\n  if (dataIdx.length !== P.D) throw new Error('carrier layout mismatch ' + dataIdx.length);\n  P.pilotIdx = Int32Array.from(pilotIdx);\n  P.dataIdx = Int32Array.from(dataIdx);\n  P.freqOf = (i) => ((P.k0 + i) * P.fs) / P.N;\n\n  // Ladder chosen from simulations of a measured room (test/ladder.cjs): with a weak top band and\n  // echoes, low code rates on denser constellations beat high code rates (QPSK 3/4 was dropped).\n  const MODES = [\n    { key: 'ultra',  name: 'Ultra-robust', mod: 'BPSK',    bps: 1, k: 1152, rate: '1/2', symbols: 16 },\n    { key: 'robust', name: 'Robust',       mod: 'QPSK',    bps: 2, k: 1152, rate: '1/2', symbols: 16 },\n    { key: 'normal', name: 'Normal',       mod: 'QPSK',    bps: 2, k: 1536, rate: '2/3', symbols: 16 },\n    { key: 'quick',  name: 'Quick',        mod: '16-QAM',  bps: 4, k: 1152, rate: '1/2', symbols: 24 },\n    // Faster modes (16-QAM 2/3, 64-QAM, 256-QAM) were removed at the user's request: real devices\n    // in real rooms rarely sustain them. Adding an entry here re-enables one end to end.\n  ];\n  if (O.modes) { MODES.length = 0; O.modes.forEach((m) => MODES.push({ ...m })); }\n  MODES.forEach((m, id) => {\n    m.id = id;\n    m.cws = (m.symbols * P.D * m.bps) / P.ldpcN;\n    if (m.cws !== Math.floor(m.cws)) throw new Error('mode ' + m.key + ' not integral');\n    m.blockSize = m.k / 8 - 4;                     // payload bytes per codeword (CRC32 appended)\n    m.frameSamples = (P.preamble + m.symbols) * P.symLen + P.W + P.GAP;\n    m.frameSeconds = m.frameSamples / P.fs;\n    m.bitsPerFrame = m.cws * m.blockSize * 8;\n    m.kbps = m.bitsPerFrame / m.frameSeconds / 1000;\n    m.bytesPerSec = (m.cws * m.blockSize) / m.frameSeconds;\n  });\n  P.modes = MODES;\n  P.maxSymbols = Math.max(...MODES.map((m) => m.symbols)) + P.preamble;\n\n  SD.params = P;\n})(globalThis.SD = globalThis.SD || {});\n\n;\n// Gray-coded square QAM (and BPSK) with max-log soft demapping.\n(function (SD) {\n  'use strict';\n\n  const cache = new Map();\n\n  class QAM {\n    constructor(bps) {\n      this.bps = bps;\n      if (bps === 1) {\n        this.b = 1; this.L = 2; this.scale = 1;\n        this.levels = Float64Array.from([1, -1]);   // gray index -> amplitude (bit 0 -> +1)\n        this.levelBits = Uint8Array.from([0, 1]);   // level index (ascending amp) -> bits\n        this.amps = Float64Array.from([-1, 1]);\n        this.ampBits = Uint8Array.from([1, 0]);\n        return;\n      }\n      const b = bps / 2, L = 1 << b;\n      this.b = b; this.L = L;\n      this.scale = 1 / Math.sqrt((2 * (L * L - 1)) / 3);\n      this.amps = new Float64Array(L);      // ascending amplitudes\n      this.ampBits = new Uint8Array(L);     // their gray labels\n      this.levels = new Float64Array(L);    // label -> amplitude\n      for (let i = 0; i < L; i++) {\n        const a = (2 * i - (L - 1)) * this.scale;\n        const g = i ^ (i >> 1);\n        this.amps[i] = a; this.ampBits[i] = g; this.levels[g] = a;\n      }\n    }\n\n    static get(bps) {\n      let q = cache.get(bps);\n      if (!q) { q = new QAM(bps); cache.set(bps, q); }\n      return q;\n    }\n\n    // bits[off..off+bps) -> [re, im]\n    map(bits, off, out) {\n      if (this.bps === 1) { out[0] = bits[off] ? -1 : 1; out[1] = 0; return out; }\n      const b = this.b;\n      let gi = 0, gq = 0;\n      for (let t = 0; t < b; t++) gi = (gi << 1) | bits[off + t];\n      for (let t = 0; t < b; t++) gq = (gq << 1) | bits[off + b + t];\n      out[0] = this.levels[gi]; out[1] = this.levels[gq];\n      return out;\n    }\n\n    // Soft demap one symbol. z = equalized point, nv = noise variance of z (complex).\n    // Writes bps LLRs (positive => bit 0) to llr[off..].\n    demap(zr, zi, nv, llr, off) {\n      const inv = 1 / nv;\n      if (this.bps === 1) { llr[off] = clip(4 * zr * inv); return; }\n      this._dim(zr, inv, llr, off);\n      this._dim(zi, inv, llr, off + this.b);\n    }\n\n    _dim(y, inv, llr, off) {\n      const b = this.b, L = this.L, amps = this.amps, bits = this.ampBits;\n      for (let t = 0; t < b; t++) {\n        let m0 = Infinity, m1 = Infinity;\n        const sh = b - 1 - t;\n        for (let i = 0; i < L; i++) {\n          const d = (y - amps[i]) * (y - amps[i]);\n          if ((bits[i] >> sh) & 1) { if (d < m1) m1 = d; } else if (d < m0) m0 = d;\n        }\n        llr[off + t] = clip((m1 - m0) * inv);\n      }\n    }\n\n    // Nearest constellation point.\n    decide(zr, zi, out) {\n      out[0] = this._near(zr);\n      out[1] = this.bps === 1 ? 0 : this._near(zi);\n      return out;\n    }\n\n    _near(y) {\n      const L = this.L, s = this.scale;\n      let i = Math.round((y / s + (L - 1)) / 2);\n      if (i < 0) i = 0; else if (i > L - 1) i = L - 1;\n      return this.amps[i];\n    }\n  }\n\n  function clip(x) { return x > 24 ? 24 : x < -24 ? -24 : x; }\n\n  SD.QAM = QAM;\n})(globalThis.SD = globalThis.SD || {});\n\n;\n// OFDM acoustic modem: frame builder (TX) and streaming receiver (RX).\n//\n// Frame = [sync][train][header][payload x S]   each symbol = CP + N samples\n//   sync   : known QPSK on all carriers; matched-filter detection + channel estimate #1\n//   train  : second known QPSK symbol; channel estimate #2, noise + clock-drift estimate\n//   header : BPSK, rate-1/4 LDPC: mode, session, block count, packet id\n//   payload: QAM data + BPSK pilots every 12th carrier, LDPC codewords interleaved\n//            across the whole frame.\n(function (SD) {\n  'use strict';\n  const P = SD.params;\n  const U = SD.util;\n  const { N, CP, W, U: NU, k0, D } = P;\n  const TWO_PI = 2 * Math.PI;\n  const KC = k0 + (NU - 1) / 2;   // band-centre carrier (decouples phase and slope fits)\n  // Receiver tracking gains (tuned on real recordings; exposed for experiments).\n  const TRACK = { mu: 0.25, slopeP: 0.5, slopeI: 0.12, bandBeta: 0.25, bandSpan: 4, nuBands: 12 };\n  // Pilot positions as fractional pilot index for every used carrier (for band tracking).\n  const PILOT_POS = (function () {\n    const pos = new Float64Array(NU), pil = P.pilotIdx;\n    for (let i = 0; i < NU; i++) pos[i] = Math.min(pil.length - 1, i / P.pilotSpacing);\n    return pos;\n  })();\n\n  // ---------- shared tables ----------\n  function qpskPN(seed) {\n    const re = new Float64Array(NU), im = new Float64Array(NU);\n    const bits = U.pnBits(NU * 2, seed), s = Math.SQRT1_2;\n    for (let i = 0; i < NU; i++) { re[i] = bits[2 * i] ? -s : s; im[i] = bits[2 * i + 1] ? -s : s; }\n    return { re, im };\n  }\n  const SYNC = qpskPN(0x51C0);\n  const TRAIN = qpskPN(0x7A11);\n  const PILOTS = [];\n  for (let j = 0; j < P.maxSymbols; j++) {\n    const b = U.pnBits(P.pilotIdx.length, U.hash32(0x9110, j));\n    PILOTS.push(Float64Array.from(b, (x) => (x ? -1 : 1)));\n  }\n  const HDR_PN = U.pnBits(P.hdrN, 0x4EAD);\n  // Header bits are scattered over all carriers: weak bands (speaker roll-off) must not hit\n  // a contiguous run of the code's parity chain.\n  const HDR_PERM = P.legacy ? Uint32Array.from({ length: P.hdrN }, (_, i) => i) : U.permutation(P.hdrN, 0x4E1D);\n  // Payload interleaver. Codewords are grouped into the smallest run of whole symbols that holds a\n  // whole number of codewords (BPSK 4 sym, QPSK 2, 16-QAM 1, 64-QAM 2 sym = 3 cw, 256-QAM 1 sym = 2 cw).\n  // Inside a slot bits are scattered over every carrier (frequency diversity); a fade or a burst\n  // later in the frame only costs the codewords in the affected slots.\n  function gcd(a, b) { while (b) { const t = a % b; a = b; b = t; } return a; }\n  function slotPermutation(mode, B) {\n    const n = P.ldpcN, perSym = D * mode.bps;\n    const slotBits = (n / gcd(n, perSym)) * perSym;\n    const inner = U.permutation(slotBits, U.hash32(0x1E7E, mode.id));\n    const perm = new Uint32Array(B);\n    for (let q = 0; q < B; q++) perm[q] = Math.floor(q / slotBits) * slotBits + inner[q % slotBits];\n    return perm;\n  }\n  const modeTables = new Map();\n  function modeTable(mode) {\n    let t = modeTables.get(mode.id);\n    if (!t) {\n      const B = mode.symbols * D * mode.bps;\n      t = {\n        B,\n        perm: P.legacy ? U.permutation(B, U.hash32(0x1E7E, mode.id)) : slotPermutation(mode, B),\n        pn: U.pnBits(B, U.hash32(0xB17E, mode.id)),\n        code: SD.getCode(P.ldpcN, mode.k),\n        qam: SD.QAM.get(mode.bps),\n      };\n      modeTables.set(mode.id, t);\n    }\n    return t;\n  }\n  const hdrCode = () => SD.getCode(P.hdrN, P.hdrK);\n\n  // Raised-cosine taper.\n  const RAMP = new Float64Array(W);\n  for (let t = 0; t < W; t++) RAMP[t] = 0.5 * (1 - Math.cos((Math.PI * (t + 0.5)) / W));\n  const TD_SCALE = 1 / Math.sqrt(2 * NU);\n\n  // Time-domain body (N samples, unit RMS) of a symbol given used-carrier values.\n  function symbolBody(Xre, Xim) {\n    const re = new Float64Array(N), im = new Float64Array(N);\n    for (let i = 0; i < NU; i++) {\n      const k = k0 + i;\n      re[k] = Xre[i]; im[k] = Xim[i];\n      re[N - k] = Xre[i]; im[N - k] = -Xim[i];\n    }\n    SD.FFT.get(N).transform(re, im, true);\n    for (let n = 0; n < N; n++) re[n] *= TD_SCALE;\n    return re;\n  }\n\n  // ---------- header ----------\n  function packHeader(h) {\n    const b = new Uint8Array(18);\n    b[0] = (P.version << 4) | (h.mode & 15);\n    b[1] = (h.session >>> 8) & 255; b[2] = h.session & 255;\n    b[3] = (h.K >>> 16) & 255; b[4] = (h.K >>> 8) & 255; b[5] = h.K & 255;\n    b[6] = (h.baseId >>> 24) & 255; b[7] = (h.baseId >>> 16) & 255; b[8] = (h.baseId >>> 8) & 255; b[9] = h.baseId & 255;\n    b[10] = h.flags || 0;\n    b[11] = h.testStep || 0; b[12] = h.testTotal || 0;\n    const c = U.crc16(b, 16);\n    b[16] = c >>> 8; b[17] = c & 255;\n    return b;\n  }\n  function unpackHeader(b) {\n    const c = U.crc16(b, 16);\n    if (((b[16] << 8) | b[17]) !== c) return null;\n    const ver = b[0] >>> 4, mode = b[0] & 15;\n    if (ver !== P.version || mode >= P.modes.length) return null;\n    return {\n      mode,\n      session: (b[1] << 8) | b[2],\n      K: (b[3] << 16) | (b[4] << 8) | b[5],\n      baseId: ((b[6] << 24) | (b[7] << 16) | (b[8] << 8) | b[9]) >>> 0,\n      flags: b[10], testStep: b[11], testTotal: b[12],\n    };\n  }\n\n  // Codeword info bits = payload || CRC32(session, id, payload).\n  function packetCRC(session, id, payload) {\n    const pre = new Uint8Array([session >>> 8, session & 255, id >>> 24, (id >>> 16) & 255, (id >>> 8) & 255, id & 255]);\n    return U.crc32(payload, U.crc32(pre) ^ 0xFFFFFFFF);\n  }\n\n  // ---------- TX ----------\n  class Modulator {\n    constructor(opts) {\n      opts = opts || {};\n      this.amp = opts.amp || 0.3;\n    }\n\n    // Returns Float32Array of the whole frame at P.fs.\n    // header: {mode, session, K, baseId, flags, testStep, testTotal}; payloads: Uint8Array[] (blockSize each)\n    frame(header, payloads) {\n      const mode = P.modes[header.mode];\n      const tab = modeTable(mode);\n      const nsym = P.preamble + mode.symbols;\n      const out = new Float32Array(nsym * P.symLen + W + P.GAP);\n      const Xre = new Float64Array(NU), Xim = new Float64Array(NU);\n\n      this._emit(out, 0, symbolBody(SYNC.re, SYNC.im));\n      this._emit(out, 1, symbolBody(TRAIN.re, TRAIN.im));\n\n      // Header symbol (BPSK).\n      const hb = U.bytesToBits(packHeader(header));\n      const hcw = hdrCode().encode(hb);\n      this._pilots(Xre, Xim, 2);\n      for (let d = 0; d < D; d++) { const c = P.dataIdx[HDR_PERM[d]]; Xre[c] = hcw[d] ^ HDR_PN[d] ? -1 : 1; Xim[c] = 0; }\n      this._emit(out, 2, symbolBody(Xre, Xim));\n\n      // Payload.\n      const n = P.ldpcN, kBytes = mode.k / 8;\n      const bits = new Uint8Array(tab.B);\n      const info = new Uint8Array(mode.k);\n      for (let c = 0; c < mode.cws; c++) {\n        const id = (header.baseId + c) >>> 0;\n        const pl = payloads[c];\n        const bytes = new Uint8Array(kBytes);\n        bytes.set(pl.subarray(0, mode.blockSize));\n        const crc = packetCRC(header.session, id, bytes.subarray(0, mode.blockSize));\n        bytes[kBytes - 4] = crc >>> 24; bytes[kBytes - 3] = (crc >>> 16) & 255; bytes[kBytes - 2] = (crc >>> 8) & 255; bytes[kBytes - 1] = crc & 255;\n        U.bytesToBits(bytes, info);\n        const cw = tab.code.encode(info);\n        const base = c * n;\n        for (let i = 0; i < n; i++) { const p = tab.perm[base + i]; bits[p] = cw[i] ^ tab.pn[p]; }\n      }\n      const pt = [0, 0], bps = mode.bps;\n      for (let s = 0; s < mode.symbols; s++) {\n        const j = P.preamble + s;\n        this._pilots(Xre, Xim, j);\n        for (let d = 0; d < D; d++) {\n          tab.qam.map(bits, (s * D + d) * bps, pt);\n          Xre[P.dataIdx[d]] = pt[0]; Xim[P.dataIdx[d]] = pt[1];\n        }\n        this._emit(out, j, symbolBody(Xre, Xim));\n      }\n\n      // Gain + clip (OFDM peaks are rare; hard limit just above).\n      const a = this.amp;\n      for (let i = 0; i < out.length; i++) {\n        let v = out[i] * a;\n        out[i] = v > 0.99 ? 0.99 : v < -0.99 ? -0.99 : v;\n      }\n      return out;\n    }\n\n    _pilots(Xre, Xim, j) {\n      const pv = PILOTS[j];\n      for (let p = 0; p < P.pilotIdx.length; p++) { Xre[P.pilotIdx[p]] = pv[p]; Xim[P.pilotIdx[p]] = 0; }\n    }\n\n    // Overlap-add symbol j (CP + body + postfix, tapered) into the frame.\n    _emit(out, j, body) {\n      const off = j * P.symLen, L = CP + N + W;\n      for (let t = 0; t < L; t++) {\n        let v;\n        if (t < CP) v = body[N - CP + t];\n        else if (t < CP + N) v = body[t - CP];\n        else v = body[t - CP - N];\n        if (t < W) v *= RAMP[t];\n        else if (t >= CP + N) v *= RAMP[W - 1 - (t - CP - N)];\n        out[off + t] += v;\n      }\n    }\n  }\n\n  // ---------- RX ----------\n  const CORR_N = 2 * N;          // correlation FFT size\n  const RHO_RING = 1 << 17;\n  const DETECT_THR = 0.035;\n  const DETECT_WIN = N + CP;     // look-ahead for the strongest path (CP-only partial matches peak one symbol early)\n\n  // Detection template: sync symbol body.\n  const TEMPLATE = (function () {\n    const body = symbolBody(SYNC.re, SYNC.im);\n    const re = new Float64Array(CORR_N), im = new Float64Array(CORR_N);\n    let e = 0;\n    for (let i = 0; i < N; i++) { re[i] = body[i]; e += body[i] * body[i]; }\n    SD.FFT.get(CORR_N).transform(re, im, false);\n    return { re, im, energy: e };\n  })();\n\n  class SampleBuffer {\n    constructor(cap) { this.data = new Float32Array(cap); this.start = 0; this.len = 0; }\n    end() { return this.start + this.len; }\n    push(x, keepFrom) {\n      if (this.len + x.length > this.data.length) {\n        let drop = Math.max(0, Math.min(keepFrom - this.start, this.len));\n        if (this.len - drop + x.length > this.data.length) drop = this.len + x.length - this.data.length;\n        this.data.copyWithin(0, drop, this.len);\n        this.start += drop; this.len -= drop;\n      }\n      this.data.set(x, this.len);\n      this.len += x.length;\n    }\n    at(abs) { return this.data[abs - this.start]; }\n    has(abs, n) { return abs >= this.start && abs + n <= this.end(); }\n  }\n\n  class Demodulator {\n    constructor() {\n      this.buf = new SampleBuffer(P.fs * 8);\n      this.rho = new Float32Array(RHO_RING);\n      this.corrPos = 0;       // next correlation lag to compute\n      this.corrValid = 0;     // first lag with valid rho in ring\n      this.scanPos = 0;       // next lag to scan for detections\n      this.cand = null;\n      this.pending = null;\n      this.level = 0;\n      this._cre = new Float64Array(CORR_N); this._cim = new Float64Array(CORR_N);\n      this._fre = new Float64Array(N); this._fim = new Float64Array(N);\n      this.stats = { syncs: 0, headerFail: 0, frames: 0 };\n      this.sfoAvg = 0; this.sfoN = 0;   // long-term clock drift (rad/carrier/symbol)\n    }\n\n    push(samples) {\n      let keep = Math.min(this.corrPos, this.scanPos);\n      if (this.pending) keep = Math.min(keep, this.pending.T - N);\n      this.buf.push(samples, keep - 64);\n      let e = 0;\n      for (let i = 0; i < samples.length; i++) e += samples[i] * samples[i];\n      this.level = Math.sqrt(e / Math.max(1, samples.length));\n    }\n\n    // Run as far as buffered audio allows. Returns events.\n    process() {\n      const ev = [];\n      for (let guard = 0; guard < 10000; guard++) {\n        if (this.pending) {\n          if (this.buf.end() < this.pending.needEnd) break;\n          this._handlePending(ev);\n          continue;\n        }\n        if (this.scanPos < this.corrPos) {\n          this._scan();\n          if (this.pending) continue;\n          if (this.scanPos < this.corrPos && !this.cand) continue;\n        }\n        if (this.corrPos + CORR_N <= this.buf.end()) { this._corrBlock(); continue; }\n        break;\n      }\n      return ev;\n    }\n\n    _corrBlock() {\n      if (this.corrPos < this.scanPos - N) { this.corrPos = this.scanPos - N; this.corrValid = this.corrPos; }\n      if (this.corrPos < this.buf.start) { this.corrPos = this.buf.start; this.corrValid = this.corrPos; }\n      if (this.corrPos + CORR_N > this.buf.end()) return;\n      const re = this._cre, im = this._cim, d0 = this.corrPos;\n      const base = d0 - this.buf.start, data = this.buf.data;\n      for (let i = 0; i < CORR_N; i++) { re[i] = data[base + i]; im[i] = 0; }\n      const fft = SD.FFT.get(CORR_N);\n      fft.transform(re, im, false);\n      const T = TEMPLATE;\n      for (let i = 0; i < CORR_N; i++) {\n        const a = re[i], b = im[i];\n        re[i] = a * T.re[i] + b * T.im[i];      // R * conj(T)\n        im[i] = b * T.re[i] - a * T.im[i];\n      }\n      fft.transform(re, im, true);\n      // Sliding energy via running sum.\n      let e = 0;\n      for (let m = 0; m < N; m++) e += data[base + m] * data[base + m];\n      const L = CORR_N - N;\n      for (let d = 0; d < L; d++) {\n        const c = re[d] / CORR_N;\n        this.rho[(d0 + d) & (RHO_RING - 1)] = (c * c) / (e * T.energy + 1e-12);\n        const a = data[base + d], b = data[base + d + N];\n        e += b * b - a * a;\n        if (e < 0) e = 0;\n      }\n      this.corrPos = d0 + L;\n    }\n\n    _scan() {\n      const end = this.corrPos;\n      let d = Math.max(this.scanPos, this.corrValid);\n      const rho = this.rho, M = RHO_RING - 1;\n      for (; d < end; d++) {\n        const r = rho[d & M];\n        if (!this.cand) {\n          if (r > DETECT_THR) this.cand = { first: d, maxD: d, maxRho: r };\n          continue;\n        }\n        const c = this.cand;\n        if (r > c.maxRho) { c.maxRho = r; c.maxD = d; }\n        if (d - c.first >= DETECT_WIN) {\n          // First significant arrival before the strongest path.\n          let T = c.maxD;\n          const lo = Math.max(c.maxD - (CP >> 1), this.corrValid);\n          for (let x = lo; x < c.maxD; x++) if (rho[x & M] >= 0.25 * c.maxRho) { T = x; break; }\n          this.cand = null;\n          this.scanPos = d + 1;\n          this.stats.syncs++;\n          this.pending = { stage: 'hdr', T, peak: c.maxRho, retry: c.maxD + (CP >> 1), needEnd: T - P.delta + 2 * P.symLen + N + 8 };\n          return;\n        }\n      }\n      this.scanPos = d;\n    }\n\n    _fft(abs) {\n      const re = this._fre, im = this._fim, data = this.buf.data, base = abs - this.buf.start;\n      for (let i = 0; i < N; i++) { re[i] = data[base + i]; im[i] = 0; }\n      SD.FFT.get(N).transform(re, im, false);\n      const yr = new Float64Array(NU), yi = new Float64Array(NU);\n      for (let i = 0; i < NU; i++) { yr[i] = re[k0 + i]; yi[i] = im[k0 + i]; }\n      return { yr, yi };\n    }\n\n    _handlePending(ev) {\n      const pd = this.pending;\n      if (pd.stage === 'hdr') {\n        const ok = this._decodeHeader(pd);\n        if (!ok) {\n          this.stats.headerFail++;\n          ev.push({ type: 'sync-fail', peak: pd.peak });\n          this.scanPos = Math.max(this.scanPos, pd.retry);\n          this.pending = null;\n          return;\n        }\n        const mode = P.modes[pd.header.mode];\n        pd.mode = mode;\n        pd.stage = 'payload';\n        pd.needEnd = pd.T - P.delta + (P.preamble + mode.symbols - 1) * P.symLen + N + 8 + 32;\n        ev.push({ type: 'header', header: pd.header, peak: pd.peak });\n        return;\n      }\n      const res = this._decodePayload(pd);\n      this.stats.frames++;\n      ev.push(res);\n      const frameStart = pd.T - CP;\n      this.scanPos = Math.max(this.scanPos, frameStart + (P.preamble + pd.mode.symbols) * P.symLen - 256);\n      this.pending = null;\n    }\n\n    // Channel estimation from sync+train, then header decode.\n    _decodeHeader(pd) {\n      const w0 = pd.T - P.delta;\n      if (!this.buf.has(w0, 2 * P.symLen + N)) return false;\n      const Y0 = this._fft(w0), Y1 = this._fft(w0 + P.symLen);\n      const Hr = new Float64Array(NU), Hi = new Float64Array(NU);\n      const H0r = new Float64Array(NU), H0i = new Float64Array(NU);\n      for (let i = 0; i < NU; i++) {\n        // H = Y * conj(X)  (|X| = 1)\n        H0r[i] = Y0.yr[i] * SYNC.re[i] + Y0.yi[i] * SYNC.im[i];\n        H0i[i] = Y0.yi[i] * SYNC.re[i] - Y0.yr[i] * SYNC.im[i];\n        Hr[i] = Y1.yr[i] * TRAIN.re[i] + Y1.yi[i] * TRAIN.im[i];\n        Hi[i] = Y1.yi[i] * TRAIN.re[i] - Y1.yr[i] * TRAIN.im[i];\n      }\n      // Phase drift between the two estimates: q = H1 * conj(H0) ~ e^{j(a + s (k - KC))}\n      const qr = new Float64Array(NU), qi = new Float64Array(NU);\n      for (let i = 0; i < NU; i++) {\n        qr[i] = Hr[i] * H0r[i] + Hi[i] * H0i[i];\n        qi[i] = Hi[i] * H0r[i] - Hr[i] * H0i[i];\n      }\n      const { a, s } = fitPhase(qr, qi, null, 1, 64);\n      const noise = new Float64Array(NU);\n      let sig = 0;\n      for (let i = 0; i < NU; i++) {\n        const ph = a + s * (k0 + i - KC), c = Math.cos(ph), sn = Math.sin(ph);\n        const ar = H0r[i] * c - H0i[i] * sn, ai = H0r[i] * sn + H0i[i] * c;\n        const dr = ar - Hr[i], di = ai - Hi[i];\n        noise[i] = (dr * dr + di * di) / 2;\n        Hr[i] = (ar + Hr[i]) / 2; Hi[i] = (ai + Hi[i]) / 2;\n        sig += Hr[i] * Hr[i] + Hi[i] * Hi[i];\n      }\n      // Smooth noise over frequency; floor to avoid over-confident LLRs.\n      const sm = smooth(noise, 24);\n      let nmean = 0;\n      for (let i = 0; i < NU; i++) nmean += sm[i];\n      nmean /= NU;\n      const floor = (sig / NU) * 1e-4;\n      for (let i = 0; i < NU; i++) sm[i] = Math.max(sm[i], floor, nmean * 0.05);\n      // Clock drift per symbol: trust the long-term estimate from earlier frames when available.\n      const s0 = this.sfoN > 0 ? this.sfoAvg : s;\n      pd.ch = { Hr, Hi, noise: sm, sPred: s0, nu: 1, tau: 0, shift: 0, sfo: s0 };\n      pd.trainSnr = 10 * Math.log10(sig / NU / nmean);\n\n      // Header symbol.\n      const raw = new Float32Array(D), llr = new Float32Array(D);\n      const z = this._symbol(pd, 2, SD.QAM.get(1), raw, null);\n      if (!z) return false;\n      for (let d = 0; d < D; d++) llr[d] = HDR_PN[d] ? -raw[HDR_PERM[d]] : raw[HDR_PERM[d]];\n      const r = hdrCode().decode(llr, 40);\n      if (!r.ok) return false;\n      const hdr = unpackHeader(U.bitsToBytes(r.bits, 18));\n      if (!hdr) return false;\n      pd.header = hdr;\n      return true;\n    }\n\n    // Demodulate OFDM symbol j: track phase/timing with pilots, equalize, soft-demap.\n    // Writes D*bps LLRs to llr[off..]. Optionally collects constellation points.\n    _symbol(pd, j, qam, llr, cons, off) {\n      off = off || 0;\n      const ch = pd.ch;\n      const w = pd.T - P.delta + j * P.symLen + ch.shift;\n      if (!this.buf.has(w, N)) return null;\n      const { yr, yi } = this._fft(w);\n      const Hr = ch.Hr, Hi = ch.Hi;\n      // Predicted drift since last symbol (pure delay => phase linear in absolute k).\n      rotate(Hr, Hi, ch.sPred * KC, ch.sPred);\n      // Pilot residual: r = Y * conj(H X)\n      const pil = P.pilotIdx, pv = PILOTS[j], np = pil.length;\n      const rr = new Float64Array(np), ri = new Float64Array(np);\n      for (let p = 0; p < np; p++) {\n        const i = pil[p], x = pv[p];\n        rr[p] = (yr[i] * Hr[i] + yi[i] * Hi[i]) * x;\n        ri[p] = (yi[i] * Hr[i] - yr[i] * Hi[i]) * x;\n      }\n      // Common phase applied fully; slope through a PI loop (slope estimates are noisy).\n      const fit = fitPhase(rr, ri, pil, P.pilotSpacing, 8);\n      const sres = fit.s, sApplied = TRACK.slopeP * sres;\n      rotate(Hr, Hi, fit.a, sApplied);\n      // Real gain correction.\n      let gn = 0, gd = 0;\n      for (let p = 0; p < np; p++) {\n        const i = pil[p], x = pv[p];\n        gn += (yr[i] * Hr[i] + yi[i] * Hi[i]) * x;\n        gd += Hr[i] * Hr[i] + Hi[i] * Hi[i];\n      }\n      const g = gn / (gd + 1e-30);\n      if (g > 0.3 && g < 3) for (let i = 0; i < NU; i++) { Hr[i] *= g; Hi[i] *= g; }\n      // Per-band tracking: pilots measure how H changed in each part of the band (movement\n      // changes echoes differently at each frequency); smooth over neighbouring pilots, interpolate.\n      if (TRACK.bandBeta > 0) {\n        const qr = new Float64Array(np), qi = new Float64Array(np), w = new Float64Array(np);\n        for (let p = 0; p < np; p++) {\n          const i = pil[p], x = pv[p];\n          qr[p] = (yr[i] * Hr[i] + yi[i] * Hi[i]) * x;     // Y X conj(H)\n          qi[p] = (yi[i] * Hr[i] - yr[i] * Hi[i]) * x;\n          w[p] = Hr[i] * Hr[i] + Hi[i] * Hi[i];\n        }\n        const sr = new Float64Array(np), si = new Float64Array(np), span = TRACK.bandSpan;\n        for (let p = 0; p < np; p++) {\n          let ar = 0, ai = 0, aw = 0;\n          for (let q = Math.max(0, p - span); q <= Math.min(np - 1, p + span); q++) { ar += qr[q]; ai += qi[q]; aw += w[q]; }\n          sr[p] = ar / (aw + 1e-30) - 1; si[p] = ai / (aw + 1e-30);   // ratio - 1\n        }\n        const beta = TRACK.bandBeta;\n        for (let i = 0; i < NU; i++) {\n          const f = PILOT_POS[i], a = Math.floor(f), b = Math.min(np - 1, a + 1), t = f - a;\n          const dr = beta * (sr[a] * (1 - t) + sr[b] * t), di = beta * (si[a] * (1 - t) + si[b] * t);\n          const hr = Hr[i], hi = Hi[i];\n          Hr[i] = hr * (1 + dr) - hi * di; Hi[i] = hr * di + hi * (1 + dr);\n        }\n      }\n      // Pilot noise relative to the training estimate, per frequency band (fades are band-specific).\n      const NB = TRACK.nuBands;\n      if (!ch.nuB) ch.nuB = new Float64Array(NB).fill(1);\n      const bs = new Float64Array(NB), bc = new Float64Array(NB);\n      let nu = 0;\n      for (let p = 0; p < np; p++) {\n        const i = pil[p], x = pv[p];\n        const er = yr[i] - Hr[i] * x, ei = yi[i] - Hi[i] * x;\n        const r = (er * er + ei * ei) / ch.noise[i];\n        nu += r;\n        const b = Math.min(NB - 1, Math.floor((p * NB) / np));\n        bs[b] += r; bc[b]++;\n      }\n      nu /= np;\n      ch.nu = 0.6 * ch.nu + 0.4 * Math.max(0.5, Math.min(nu, 50));\n      for (let b = 0; b < NB; b++) {\n        const v = bc[b] ? bs[b] / bc[b] : nu;\n        ch.nuB[b] = 0.6 * ch.nuB[b] + 0.4 * Math.max(0.5, Math.min(v, 50));\n      }\n      // Drift tracking: accumulate timing drift (samples) and smooth the per-symbol slope.\n      ch.tau += (-(ch.sPred + sApplied) * N) / TWO_PI;\n      ch.sPred += TRACK.slopeI * sres;\n\n      // Equalize, demap, decision-directed channel update.\n      const bps = qam.bps, mu = TRACK.mu;\n      const dec = [0, 0];\n      const gate = qam.bps === 1 ? 0.5 : qam.scale * 0.5;\n      let evm = 0, evmN = 0;\n      for (let d = 0; d < D; d++) {\n        const i = P.dataIdx[d];\n        const hr = Hr[i], hi = Hi[i];\n        const h2 = hr * hr + hi * hi + 1e-30;\n        const zr = (yr[i] * hr + yi[i] * hi) / h2;\n        const zi = (yi[i] * hr - yr[i] * hi) / h2;\n        const nv = (ch.noise[i] * (NB > 1 ? ch.nuB[Math.min(NB - 1, Math.floor((PILOT_POS[i] * NB) / np))] : ch.nu)) / h2;\n        qam.demap(zr, zi, nv, llr, off + d * bps);\n        qam.decide(zr, zi, dec);\n        const er = zr - dec[0], ei = zi - dec[1];\n        evm += (er * er + ei * ei) * h2; evmN += h2;   // error power in the received domain\n        if (cons && (d & 3) === (j & 3)) cons.push(zr, zi);\n        if (Math.abs(er) < gate && Math.abs(ei) < gate) {\n          // target H = Y / x\n          const x2 = dec[0] * dec[0] + dec[1] * dec[1];\n          const tr = (yr[i] * dec[0] + yi[i] * dec[1]) / x2;\n          const ti = (yi[i] * dec[0] - yr[i] * dec[1]) / x2;\n          Hr[i] += mu * (tr - hr); Hi[i] += mu * (ti - hi);\n        }\n      }\n      for (let p = 0; p < np; p++) {\n        const i = pil[p], x = pv[p];\n        Hr[i] += mu * (yr[i] * x - Hr[i]); Hi[i] += mu * (yi[i] * x - Hi[i]);\n      }\n      // Move the FFT window when the clock drift has accumulated a few samples.\n      if (Math.abs(ch.tau) >= 6) {\n        const sh = Math.round(ch.tau);\n        ch.shift += sh; ch.tau -= sh;\n        rotate(Hr, Hi, (TWO_PI * sh * KC) / N, (TWO_PI * sh) / N);\n      }\n      ch.sfo = ch.sPred;\n      pd.evm = (pd.evm || 0) + evm; pd.evmN = (pd.evmN || 0) + evmN;\n      return true;\n    }\n\n    _decodePayload(pd) {\n      const mode = pd.mode, tab = modeTable(mode), h = pd.header;\n      const llr = new Float32Array(tab.B);\n      const cons = [];\n      let okSyms = true;\n      pd.evm = 0; pd.evmN = 0;\n      for (let s = 0; s < mode.symbols; s++) {\n        const r = this._symbol(pd, P.preamble + s, tab.qam, llr, s % 2 === 0 && cons.length < 4000 ? cons : null, s * D * mode.bps);\n        if (!r) { okSyms = false; break; }\n      }\n      const n = P.ldpcN, kBytes = mode.k / 8;\n      const cwl = new Float32Array(n);\n      const packets = [];\n      let rawErr = 0, rawBits = 0, okCount = 0, iters = 0;\n      for (let c = 0; c < mode.cws; c++) {\n        const id = (h.baseId + c) >>> 0;\n        const base = c * n;\n        for (let i = 0; i < n; i++) { const p = tab.perm[base + i]; cwl[i] = tab.pn[p] ? -llr[p] : llr[p]; }\n        const r = okSyms ? tab.code.decode(cwl, 40) : { ok: false, bits: null, iters: 0 };\n        iters += r.iters;\n        let data = null;\n        if (r.ok) {\n          const bytes = U.bitsToBytes(r.bits, kBytes);\n          const pl = bytes.subarray(0, mode.blockSize);\n          const crc = ((bytes[kBytes - 4] << 24) | (bytes[kBytes - 3] << 16) | (bytes[kBytes - 2] << 8) | bytes[kBytes - 1]) >>> 0;\n          if (crc === packetCRC(h.session, id, pl)) {\n            data = pl.slice();\n            okCount++;\n            for (let i = 0; i < n; i++) { rawBits++; if ((cwl[i] < 0 ? 1 : 0) !== r.bits[i]) rawErr++; }\n          }\n        }\n        packets.push({ id, data });\n      }\n      // Diagnostics.\n      const ch = pd.ch;\n      const snrBins = new Float32Array(64);\n      for (let b = 0; b < 64; b++) {\n        let s = 0, nn = 0;\n        const i0 = Math.floor((b * NU) / 64), i1 = Math.floor(((b + 1) * NU) / 64);\n        for (let i = i0; i < i1; i++) { s += ch.Hr[i] * ch.Hr[i] + ch.Hi[i] * ch.Hi[i]; nn += ch.noise[i] * ch.nu; }\n        snrBins[b] = 10 * Math.log10(s / nn + 1e-12);\n      }\n      if (okCount > 0) {\n        this.sfoAvg = this.sfoN ? 0.7 * this.sfoAvg + 0.3 * ch.sPred : ch.sPred;\n        this.sfoN++;\n      }\n      const evmDb = pd.evmN ? 10 * Math.log10(pd.evm / pd.evmN + 1e-12) : 0;\n      const driftPerSym = (-ch.sfo * N) / TWO_PI;\n      return {\n        type: 'frame', header: h, mode: mode.id, packets,\n        ok: okCount, total: mode.cws,\n        snr: -evmDb, trainSnr: pd.trainSnr, snrBins,\n        rawBer: rawBits ? rawErr / rawBits : null,\n        ppm: (driftPerSym / P.symLen) * 1e6,\n        iters: iters / mode.cws,\n        constellation: Float32Array.from(cons),\n        peak: pd.peak,\n      };\n    }\n  }\n\n  // Multiply H by e^{j(a + s (k - KC))} for all used carriers.\n  function rotate(Hr, Hi, a, s) {\n    if (a === 0 && s === 0) return;\n    for (let i = 0; i < NU; i++) {\n      const ph = a + s * (k0 + i - KC), c = Math.cos(ph), sn = Math.sin(ph);\n      const r = Hr[i] * c - Hi[i] * sn, im = Hr[i] * sn + Hi[i] * c;\n      Hr[i] = r; Hi[i] = im;\n    }\n  }\n\n  // Fit phase(k) = a + s (k - KC) to complex samples z (weights = |z|).\n  // idx: local carrier index per sample (null => 0..n-1), spacing: carriers between samples,\n  // lag: sample lag for the slope estimate (long lags => much less noise).\n  function fitPhase(zr, zi, idx, spacing, lag) {\n    const n = zr.length;\n    let sr = 0, si = 0;\n    for (let i = 0; i + lag < n; i++) {\n      sr += zr[i + lag] * zr[i] + zi[i + lag] * zi[i];\n      si += zi[i + lag] * zr[i] - zr[i + lag] * zi[i];\n    }\n    const s = Math.atan2(si, sr) / (lag * spacing);\n    let cr = 0, ci = 0;\n    for (let i = 0; i < n; i++) {\n      const k = k0 + (idx ? idx[i] : i);\n      const ph = -s * (k - KC), c = Math.cos(ph), sn = Math.sin(ph);\n      cr += zr[i] * c - zi[i] * sn; ci += zr[i] * sn + zi[i] * c;\n    }\n    return { a: Math.atan2(ci, cr), s };\n  }\n\n  function smooth(x, half) {\n    const n = x.length, out = new Float64Array(n);\n    const pre = new Float64Array(n + 1);\n    for (let i = 0; i < n; i++) pre[i + 1] = pre[i] + x[i];\n    for (let i = 0; i < n; i++) {\n      const a = Math.max(0, i - half), b = Math.min(n, i + half + 1);\n      out[i] = (pre[b] - pre[a]) / (b - a);\n    }\n    return out;\n  }\n\n  SD.Modulator = Modulator;\n  SD.Demodulator = Demodulator;\n  SD.modem = { packHeader, unpackHeader, packetCRC, symbolBody, TRACK };\n})(globalThis.SD = globalThis.SD || {});\n\n;\n// Streaming windowed-sinc resampler (Kaiser window, 32 taps, 1024 phases).\n(function (SD) {\n  'use strict';\n\n  const HALF = 16, PHASES = 1024;\n\n  function bessel0(x) {\n    let s = 1, t = 1;\n    for (let k = 1; k < 30; k++) { t *= (x / (2 * k)) * (x / (2 * k)); s += t; }\n    return s;\n  }\n\n  const tables = new Map();\n  function table(cutoff) {\n    const key = cutoff.toFixed(5);\n    let tb = tables.get(key);\n    if (tb) return tb;\n    const beta = 8, i0b = bessel0(beta);\n    tb = new Float32Array(PHASES * 2 * HALF);\n    for (let p = 0; p < PHASES; p++) {\n      const frac = p / PHASES;\n      let sum = 0;\n      for (let t = 0; t < 2 * HALF; t++) {\n        const x = t - (HALF - 1) - frac;\n        const sinc = x === 0 ? 1 : Math.sin(Math.PI * cutoff * x) / (Math.PI * cutoff * x);\n        const r = x / HALF;\n        const win = Math.abs(r) >= 1 ? 0 : bessel0(beta * Math.sqrt(1 - r * r)) / i0b;\n        const v = cutoff * sinc * win;\n        tb[p * 2 * HALF + t] = v;\n        sum += v;\n      }\n      for (let t = 0; t < 2 * HALF; t++) tb[p * 2 * HALF + t] /= sum;  // unity DC gain\n    }\n    tables.set(key, tb);\n    return tb;\n  }\n\n  class Resampler {\n    constructor(inRate, outRate) {\n      this.setRates(inRate, outRate);\n      this.buf = new Float32Array(1 << 16);\n      this.len = HALF - 1;       // leading zeros so output 0 aligns with input 0\n      this.t = HALF - 1;\n    }\n    setRates(inRate, outRate) {\n      this.step = inRate / outRate;\n      this.pass = Math.abs(this.step - 1) < 1e-9;\n      this.tb = table(Math.min(1, outRate / inRate) * 0.97);\n    }\n    process(input) {\n      if (this.pass) return input instanceof Float32Array ? input : Float32Array.from(input);\n      if (this.len + input.length > this.buf.length) {\n        const nb = new Float32Array(Math.max(this.buf.length * 2, this.len + input.length));\n        nb.set(this.buf.subarray(0, this.len)); this.buf = nb;\n      }\n      this.buf.set(input, this.len);\n      this.len += input.length;\n      const maxOut = Math.ceil((this.len - this.t) / this.step) + 2;\n      const out = new Float32Array(Math.max(0, maxOut));\n      const tb = this.tb, buf = this.buf, W2 = 2 * HALF;\n      let n = 0, t = this.t;\n      while (true) {\n        const it = Math.floor(t);\n        if (it + HALF >= this.len) break;\n        const p = Math.min(PHASES - 1, Math.round((t - it) * PHASES)) ;\n        const base = it - (HALF - 1), tbo = p * W2;\n        let acc = 0;\n        for (let k = 0; k < W2; k++) acc += buf[base + k] * tb[tbo + k];\n        out[n++] = acc;\n        t += this.step;\n      }\n      // Drop consumed input, keep history.\n      const keepFrom = Math.max(0, Math.floor(t) - (HALF - 1));\n      buf.copyWithin(0, keepFrom, this.len);\n      this.len -= keepFrom;\n      this.t = t - keepFrom;\n      return out.subarray(0, n);\n    }\n  }\n\n  SD.Resampler = Resampler;\n})(globalThis.SD = globalThis.SD || {});\n\n;\n// Systematic random linear fountain code over GF(2).\n// Packet ids 0..K-1 are the source blocks themselves; ids >= K are dense random\n// XOR combinations. Any K independent packets rebuild the file, so a receiver can\n// start listening at any moment and every lost frame is replaced by later ones.\n(function (SD) {\n  'use strict';\n  const U = SD.util;\n\n  function coeffs(session, id, K) {\n    const W = (K + 31) >>> 5;\n    const c = new Uint32Array(W);\n    const r = U.rng(U.hash32(session, id, 0xF0F0));\n    for (let w = 0; w < W; w++) c[w] = r();\n    const tail = K & 31;\n    if (tail) c[W - 1] &= (1 << tail) - 1;\n    let any = 0;\n    for (let w = 0; w < W; w++) any |= c[w];\n    if (!any) c[(id % K) >>> 5] |= 1 << ((id % K) & 31);\n    return c;\n  }\n\n  function xorInto(dst, src, off, len) {\n    for (let i = 0; i < len; i++) dst[i] ^= src[off + i];\n  }\n\n  class FountainEncoder {\n    constructor(data, blockSize, session) {\n      this.B = blockSize;\n      this.K = Math.max(1, Math.ceil(data.length / blockSize));\n      this.session = session;\n      this.blocks = new Uint8Array(this.K * blockSize);\n      this.blocks.set(data);\n    }\n    packet(id) {\n      const B = this.B, K = this.K;\n      if (id < K) return this.blocks.slice(id * B, (id + 1) * B);\n      const c = coeffs(this.session, id, K), out = new Uint8Array(B);\n      for (let w = 0; w < c.length; w++) {\n        let word = c[w];\n        while (word) {\n          const bit = 31 - Math.clz32(word & -word);\n          word &= word - 1;\n          xorInto(out, this.blocks, ((w << 5) + bit) * B, B);\n        }\n      }\n      return out;\n    }\n  }\n\n  class FountainDecoder {\n    constructor(K, blockSize, session) {\n      this.K = K; this.B = blockSize; this.session = session;\n      this.W = (K + 31) >>> 5;\n      this.known = new Uint8Array(K);\n      this.data = new Uint8Array(K * blockSize);\n      this.pivots = new Array(K).fill(null);\n      this.numKnown = 0; this.numPivots = 0;\n      this.seen = new Set();\n      this.received = 0;\n      this.done = false;\n    }\n    get rank() { return this.numKnown + this.numPivots; }\n\n    // Returns true when the packet added new information.\n    add(id, payload) {\n      if (this.done || this.seen.has(id)) return false;\n      this.seen.add(id);\n      this.received++;\n      let gained;\n      if (id < this.K) {\n        if (this.known[id]) return false;\n        const row = this.pivots[id];\n        this._setKnown(id, payload);\n        if (row) {\n          // That pivot row lost its pivot column: reduce it and re-insert.\n          this.pivots[id] = null; this.numPivots--;\n          row.coef[id >>> 5] &= ~(1 << (id & 31));\n          xorInto(row.pay, payload, 0, this.B);\n          gained = this._insert(row);\n        } else gained = true;\n      } else {\n        gained = this._insert({ coef: coeffs(this.session, id, this.K), pay: payload.slice() });\n      }\n      if (this.rank === this.K) this._solve();\n      return gained;\n    }\n\n    _setKnown(c, pay) {\n      this.known[c] = 1;\n      this.data.set(pay.subarray(0, this.B), c * this.B);\n      this.numKnown++;\n    }\n\n    _insert(row) {\n      const { coef, pay } = row, B = this.B, W = this.W;\n      for (let w = 0; w < W; w++) {\n        let word;\n        while ((word = coef[w]) !== 0) {\n          const bit = 31 - Math.clz32(word & -word);\n          const c = (w << 5) + bit;\n          if (this.known[c]) {\n            coef[w] = word & (word - 1);\n            xorInto(pay, this.data, c * B, B);\n            continue;\n          }\n          const pv = this.pivots[c];\n          if (pv) {\n            const pc = pv.coef;\n            for (let x = w; x < W; x++) coef[x] ^= pc[x];\n            xorInto(pay, pv.pay, 0, B);\n            continue;\n          }\n          this.pivots[c] = row; this.numPivots++;\n          return true;\n        }\n      }\n      return false;\n    }\n\n    _solve() {\n      const B = this.B;\n      for (let c = this.K - 1; c >= 0; c--) {\n        const row = this.pivots[c];\n        if (!row) continue;\n        const { coef, pay } = row;\n        coef[c >>> 5] &= ~(1 << (c & 31));\n        for (let w = c >>> 5; w < this.W; w++) {\n          let word = coef[w];\n          while (word) {\n            const bit = 31 - Math.clz32(word & -word);\n            word &= word - 1;\n            xorInto(pay, this.data, ((w << 5) + bit) * B, B);\n          }\n        }\n        this.pivots[c] = null;\n        this._setKnown(c, pay);\n      }\n      this.numPivots = 0;\n      this.done = true;\n    }\n  }\n\n  SD.FountainEncoder = FountainEncoder;\n  SD.FountainDecoder = FountainDecoder;\n})(globalThis.SD = globalThis.SD || {});\n\n;\n// SonicDrop engine: all signal processing runs here, off the UI thread.\n/* global SD, importScripts */\nif (!self.SD || !self.SD.Demodulator) {\n  importScripts('core/util.js', 'core/fft.js', 'core/ldpc.js', 'core/params.js', 'core/qam.js',\n    'core/modem.js', 'core/resampler.js', 'core/fountain.js');\n}\n(function () {\n  'use strict';\n  const P = SD.params;\n  const MAX_K = 40000;        // ~5 MB: bounds receiver memory whatever a transmitter claims\n  const MAX_SESSIONS = 8;\n  let tx = null, rx = null;\n\n  const post = (m, tr) => self.postMessage(m, tr || []);\n\n  self.onmessage = (e) => {\n    const m = e.data;\n    try {\n      switch (m.cmd) {\n        case 'warmup': warmup(); break;\n        case 'tx-start': txStart(m); break;\n        case 'tx-frames': txFrames(m.count || 1); break;\n        case 'tx-stop': tx = null; break;\n        case 'rx-start': rxStart(m); break;\n        case 'rx-audio': if (rx) rxAudio(m.samples); break;\n        case 'rx-stop': rx = null; break;\n      }\n    } catch (err) {\n      post({ evt: 'error', message: String(err && err.stack || err) });\n    }\n  };\n\n  // Build the LDPC codes ahead of time so the first frame isn't delayed.\n  function warmup() {\n    const t0 = Date.now();\n    SD.getCode(P.hdrN, P.hdrK);\n    new Set(P.modes.map((m) => m.k)).forEach((k) => SD.getCode(P.ldpcN, k));\n    post({ evt: 'ready', ms: Date.now() - t0 });\n  }\n\n  // ---------------- TX ----------------\n  function testPlan() {\n    const plan = [];\n    P.modes.forEach((m, step) => { plan.push({ mode: m.id, step }); plan.push({ mode: m.id, step }); });\n    return plan;\n  }\n\n  function txStart(m) {\n    tx = { mod: new SD.Modulator({ amp: m.amp || 0.3 }), session: m.session & 0xFFFF, nextId: 0, frame: 0 };\n    if (m.test) {\n      tx.plan = testPlan();\n      post({ evt: 'tx-ready', test: true, frames: tx.plan.length, seconds: tx.plan.reduce((a, s) => a + P.modes[s.mode].frameSeconds, 0) });\n      return;\n    }\n    const mode = P.modes[m.mode];\n    tx.mode = mode;\n    tx.enc = new SD.FountainEncoder(new Uint8Array(m.data), mode.blockSize, tx.session);\n    post({ evt: 'tx-ready', K: tx.enc.K, blockSize: mode.blockSize, cws: mode.cws, frameSeconds: mode.frameSeconds });\n  }\n\n  function txFrames(count) {\n    for (let i = 0; i < count && tx; i++) {\n      let header, payloads = [], mode, step = null;\n      if (tx.plan) {\n        if (tx.frame >= tx.plan.length) { post({ evt: 'tx-end' }); return; }\n        const s = tx.plan[tx.frame];\n        mode = P.modes[s.mode]; step = s.step;\n        header = { mode: mode.id, session: tx.session, K: 0, baseId: tx.nextId, flags: 1, testStep: step, testTotal: P.modes.length };\n        for (let c = 0; c < mode.cws; c++) {\n          const r = SD.util.rng(SD.util.hash32(tx.session, tx.nextId + c));\n          const pl = new Uint8Array(mode.blockSize);\n          for (let b = 0; b < pl.length; b++) pl[b] = r() & 255;\n          payloads.push(pl);\n        }\n      } else {\n        mode = tx.mode;\n        header = { mode: mode.id, session: tx.session, K: tx.enc.K, baseId: tx.nextId };\n        for (let c = 0; c < mode.cws; c++) payloads.push(tx.enc.packet(tx.nextId + c));\n      }\n      const samples = tx.mod.frame(header, payloads);\n      post({ evt: 'tx-frame', samples, info: { baseId: tx.nextId, cws: mode.cws, mode: mode.id, step, index: tx.frame, seconds: samples.length / P.fs } }, [samples.buffer]);\n      tx.nextId += mode.cws;\n      tx.frame++;\n    }\n  }\n\n  // ---------------- RX ----------------\n  function rxStart(m) {\n    rx = {\n      rate: m.rate,\n      rs: new SD.Resampler(m.rate, P.fs),\n      dm: new SD.Demodulator(),\n      sessions: new Map(),\n      samples: 0,\n      lastStatus: 0,\n    };\n    post({ evt: 'rx-started', rate: m.rate });\n  }\n\n  function rxAudio(samples) {\n    rx.samples += samples.length;\n    const x = rx.rs.process(samples);\n    rx.dm.push(x);\n    const evs = rx.dm.process();\n    const t = rx.samples / rx.rate;\n    for (const ev of evs) handle(ev, t);\n    if (t - rx.lastStatus > 0.1) {\n      rx.lastStatus = t;\n      const st = rx.dm.stats;\n      post({ evt: 'rx-status', t, level: rx.dm.level, syncs: st.syncs, headerFail: st.headerFail, frames: st.frames, busy: !!rx.dm.pending });\n    }\n  }\n\n  function handle(ev, t) {\n    if (ev.type === 'header') { post({ evt: 'rx-header', t, header: ev.header }); return; }\n    if (ev.type === 'sync-fail') { post({ evt: 'rx-syncfail', t }); return; }\n    if (ev.type !== 'frame') return;\n    const h = ev.header, mode = P.modes[ev.mode];\n    const stats = {\n      mode: ev.mode, ok: ev.ok, total: ev.total, snr: ev.snr, trainSnr: ev.trainSnr, ppm: ev.ppm,\n      rawBer: ev.rawBer, iters: ev.iters, snrBins: ev.snrBins, constellation: ev.constellation, peak: ev.peak,\n    };\n    if (h.flags & 1) {\n      post({ evt: 'rx-test', t, step: h.testStep, steps: h.testTotal, session: h.session, stats }, [ev.constellation.buffer]);\n      return;\n    }\n    if (!h.K || h.K > MAX_K) return;\n    let s = rx.sessions.get(h.session);\n    if (s && (s.dec.K !== h.K || s.mode !== ev.mode)) s = null;   // corrupted/changed: start over\n    if (!s) {\n      s = { dec: new SD.FountainDecoder(h.K, mode.blockSize, h.session), mode: ev.mode, headLen: 0, reported: false };\n      rx.sessions.set(h.session, s);\n      while (rx.sessions.size > MAX_SESSIONS) rx.sessions.delete(rx.sessions.keys().next().value);\n      post({ evt: 'rx-new', t, session: h.session, K: h.K, mode: ev.mode, blockSize: mode.blockSize });\n    }\n    const wasDone = s.dec.done;\n    let gained = 0;\n    for (const pk of ev.packets) if (pk.data && s.dec.add(pk.id, pk.data)) gained++;\n    // Contiguous prefix of known blocks -> lets the UI show file names early.\n    let head = null, n = 0;\n    const maxHead = Math.min(s.dec.K, Math.ceil(4096 / mode.blockSize));\n    while (n < maxHead && s.dec.known[n]) n++;\n    if (n > s.headLen) { s.headLen = n; head = s.dec.data.slice(0, n * mode.blockSize); }\n    post({\n      evt: 'rx-frame', t, session: h.session, stats,\n      progress: {\n        K: s.dec.K, rank: s.dec.rank, known: s.dec.known.slice(), received: s.dec.received,\n        gained, gainedBytes: gained * mode.blockSize, done: s.dec.done,\n      },\n      head,\n    }, [ev.constellation.buffer]);\n    if (s.dec.done && !wasDone && !s.reported) {\n      s.reported = true;\n      const data = s.dec.data.slice();\n      post({ evt: 'rx-done', t, session: h.session, data }, [data.buffer]);\n    }\n  }\n})();\n", worklet: "// Microphone capture: forwards raw mono samples in 4096-sample chunks.\nclass SDCapture extends AudioWorkletProcessor {\n  constructor() {\n    super();\n    this.buf = new Float32Array(4096);\n    this.n = 0;\n  }\n  process(inputs) {\n    const ch = inputs[0] && inputs[0][0];\n    if (ch) {\n      for (let i = 0; i < ch.length; i++) {\n        this.buf[this.n++] = ch[i];\n        if (this.n === this.buf.length) {\n          this.port.postMessage(this.buf, [this.buf.buffer]);\n          this.buf = new Float32Array(4096);\n          this.n = 0;\n        }\n      }\n    }\n    return true;\n  }\n}\nregisterProcessor('sd-capture', SDCapture);\n" };
+</script>
+<script>
+// SonicDrop core: shared helpers (PRNG, hashing, CRC, bit packing).
+// Classic script: attaches to globalThis.SD so it runs in pages, workers and Node.
+(function (SD) {
+  'use strict';
+
+  // Deterministic 32-bit PRNG (mulberry32). Same sequence on every platform.
+  function rng(seed) {
+    let a = seed >>> 0;
+    return function () {
+      a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return (t ^ (t >>> 14)) >>> 0;
+    };
+  }
+
+  // Mix several integers into one 32-bit seed.
+  function hash32() {
+    let h = 0x811C9DC5 | 0;
+    for (let i = 0; i < arguments.length; i++) {
+      let v = arguments[i] >>> 0;
+      for (let b = 0; b < 4; b++) {
+        h ^= v & 0xFF;
+        h = Math.imul(h, 0x01000193);
+        v >>>= 8;
+      }
+    }
+    h ^= h >>> 16; h = Math.imul(h, 0x85EBCA6B);
+    h ^= h >>> 13; h = Math.imul(h, 0xC2B2AE35);
+    h ^= h >>> 16;
+    return h >>> 0;
+  }
+
+  // Fisher-Yates permutation of 0..n-1 from a seed.
+  function permutation(n, seed) {
+    const p = new Uint32Array(n);
+    for (let i = 0; i < n; i++) p[i] = i;
+    const r = rng(seed);
+    for (let i = n - 1; i > 0; i--) {
+      const j = r() % (i + 1);
+      const t = p[i]; p[i] = p[j]; p[j] = t;
+    }
+    return p;
+  }
+
+  // Pseudo-random bit sequence (0/1 bytes).
+  function pnBits(n, seed) {
+    const out = new Uint8Array(n);
+    const r = rng(seed);
+    let word = 0;
+    for (let i = 0; i < n; i++) {
+      if ((i & 31) === 0) word = r();
+      out[i] = (word >>> (i & 31)) & 1;
+    }
+    return out;
+  }
+
+  const CRC32_TABLE = (function () {
+    const t = new Uint32Array(256);
+    for (let i = 0; i < 256; i++) {
+      let c = i;
+      for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1;
+      t[i] = c >>> 0;
+    }
+    return t;
+  })();
+
+  function crc32(bytes, init) {
+    let c = (init === undefined ? 0xFFFFFFFF : init) >>> 0;
+    for (let i = 0; i < bytes.length; i++) c = CRC32_TABLE[(c ^ bytes[i]) & 0xFF] ^ (c >>> 8);
+    return c >>> 0;
+  }
+
+  function crc16(bytes, len) {
+    let c = 0xFFFF;
+    const n = len === undefined ? bytes.length : len;
+    for (let i = 0; i < n; i++) {
+      c ^= bytes[i] << 8;
+      for (let k = 0; k < 8; k++) c = c & 0x8000 ? ((c << 1) ^ 0x1021) & 0xFFFF : (c << 1) & 0xFFFF;
+    }
+    return c;
+  }
+
+  // Bytes -> bits (MSB first), one bit per Uint8.
+  function bytesToBits(bytes, out, offset) {
+    const n = bytes.length * 8;
+    out = out || new Uint8Array(n);
+    offset = offset || 0;
+    for (let i = 0; i < bytes.length; i++) {
+      const b = bytes[i];
+      for (let k = 0; k < 8; k++) out[offset + i * 8 + k] = (b >>> (7 - k)) & 1;
+    }
+    return out;
+  }
+
+  function bitsToBytes(bits, nBytes, offset) {
+    offset = offset || 0;
+    const out = new Uint8Array(nBytes);
+    for (let i = 0; i < nBytes; i++) {
+      let b = 0;
+      for (let k = 0; k < 8; k++) b = (b << 1) | (bits[offset + i * 8 + k] & 1);
+      out[i] = b;
+    }
+    return out;
+  }
+
+  SD.util = { rng, hash32, permutation, pnBits, crc32, crc16, bytesToBits, bitsToBytes };
+})(globalThis.SD = globalThis.SD || {});
+
+</script>
+<script>
+// OFDM numerology and speed modes. Both ends derive everything from this table.
+(function (SD) {
+  'use strict';
+
+  const O = globalThis.SD_PARAM_OVERRIDES || {};   // test hook (e.g. try other cyclic prefixes)
+  const P = {
+    version: O.legacy ? 1 : 2,   // 2 = interleaved header + slot-local payload interleaver
+    legacy: !!O.legacy,
+    fs: 48000,       // internal sample rate (resampled on capture if the device differs)
+    N: 2048,         // FFT size  -> 23.4375 Hz subcarrier spacing
+    CP: O.CP || 768, // cyclic prefix (16 ms): absorbs room echoes (measured rooms reflect up to ~13 ms)
+    W: 64,           // raised-cosine overlap between symbols (no clicks, less splatter)
+    GAP: 480,        // silence after each frame so reverb decays before the next sync
+    k0: 48,          // first used subcarrier (1125 Hz)
+    U: 629,          // used subcarriers (1125 Hz .. 15844 Hz)
+    pilotSpacing: 12,
+    D: 576,          // data subcarriers per symbol
+    ldpcN: 2304,
+    hdrN: 576, hdrK: 144,
+    delta: 48,       // FFT window back-off into the cyclic prefix
+    preamble: 3,     // sync + train + header symbols
+  };
+  P.symLen = P.N + P.CP;
+
+  const pilotIdx = [], dataIdx = [];
+  for (let i = 0; i < P.U; i++) (i % P.pilotSpacing === 0 ? pilotIdx : dataIdx).push(i);
+  if (dataIdx.length !== P.D) throw new Error('carrier layout mismatch ' + dataIdx.length);
+  P.pilotIdx = Int32Array.from(pilotIdx);
+  P.dataIdx = Int32Array.from(dataIdx);
+  P.freqOf = (i) => ((P.k0 + i) * P.fs) / P.N;
+
+  // Ladder chosen from simulations of a measured room (test/ladder.cjs): with a weak top band and
+  // echoes, low code rates on denser constellations beat high code rates (QPSK 3/4 was dropped).
+  const MODES = [
+    { key: 'ultra',  name: 'Ultra-robust', mod: 'BPSK',    bps: 1, k: 1152, rate: '1/2', symbols: 16 },
+    { key: 'robust', name: 'Robust',       mod: 'QPSK',    bps: 2, k: 1152, rate: '1/2', symbols: 16 },
+    { key: 'normal', name: 'Normal',       mod: 'QPSK',    bps: 2, k: 1536, rate: '2/3', symbols: 16 },
+    { key: 'quick',  name: 'Quick',        mod: '16-QAM',  bps: 4, k: 1152, rate: '1/2', symbols: 24 },
+    // Faster modes (16-QAM 2/3, 64-QAM, 256-QAM) were removed at the user's request: real devices
+    // in real rooms rarely sustain them. Adding an entry here re-enables one end to end.
+  ];
+  if (O.modes) { MODES.length = 0; O.modes.forEach((m) => MODES.push({ ...m })); }
+  MODES.forEach((m, id) => {
+    m.id = id;
+    m.cws = (m.symbols * P.D * m.bps) / P.ldpcN;
+    if (m.cws !== Math.floor(m.cws)) throw new Error('mode ' + m.key + ' not integral');
+    m.blockSize = m.k / 8 - 4;                     // payload bytes per codeword (CRC32 appended)
+    m.frameSamples = (P.preamble + m.symbols) * P.symLen + P.W + P.GAP;
+    m.frameSeconds = m.frameSamples / P.fs;
+    m.bitsPerFrame = m.cws * m.blockSize * 8;
+    m.kbps = m.bitsPerFrame / m.frameSeconds / 1000;
+    m.bytesPerSec = (m.cws * m.blockSize) / m.frameSeconds;
+  });
+  P.modes = MODES;
+  P.maxSymbols = Math.max(...MODES.map((m) => m.symbols)) + P.preamble;
+
+  SD.params = P;
+})(globalThis.SD = globalThis.SD || {});
+
+</script>
+<script>
+// Transfer container: bundles files/text, compresses, optionally encrypts, and
+// carries a SHA-256 so the receiver can prove the bytes are exactly what was sent.
+//
+//   'SDR1' | flags u8 (1=encrypted, 2=deflate) | bodyLen u32 | body
+//   body (plain)     = metaLen u32 | meta JSON | payload (deflated if flag 2)
+//   body (encrypted) = salt[16] | iv[12] | iterations u32 | AES-256-GCM(plain body)
+(function (SD) {
+  'use strict';
+  const MAGIC = [0x53, 0x44, 0x52, 0x31];
+  const F_ENC = 1, F_ZIP = 2;
+  const ITER = 250000;
+  const te = new TextEncoder(), td = new TextDecoder();
+
+  function u32(n) { return [(n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255]; }
+  function readU32(b, o) { return ((b[o] << 24) | (b[o + 1] << 16) | (b[o + 2] << 8) | b[o + 3]) >>> 0; }
+  function concat(parts) {
+    let n = 0; for (const p of parts) n += p.length;
+    const out = new Uint8Array(n); let o = 0;
+    for (const p of parts) { out.set(p, o); o += p.length; }
+    return out;
+  }
+  function b64(bytes) {
+    let s = ''; for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
+    return btoa(s);
+  }
+
+  async function streamBytes(bytes, stream, limit) {
+    const reader = new Blob([bytes]).stream().pipeThrough(stream).getReader();
+    const parts = [];
+    let n = 0;
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      n += value.length;
+      if (limit !== undefined && n > limit) {   // refuse decompression bombs
+        reader.cancel().catch(() => {});
+        throw new Error('Transfer expands beyond its declared size');
+      }
+      parts.push(value);
+    }
+    return concat(parts);
+  }
+  const MAX_ITER = 2000000;   // PBKDF2 cost comes from the sender: cap it so a hostile value can't hang the tab
+  const canZip = typeof CompressionStream !== 'undefined';
+
+  async function deriveKey(pass, salt, iter) {
+    const base = await crypto.subtle.importKey('raw', te.encode(pass), 'PBKDF2', false, ['deriveKey']);
+    return crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: iter, hash: 'SHA-256' }, base,
+      { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+  }
+
+  // files: [{name, type, data: Uint8Array, message?: bool}]
+  async function pack(files, opts) {
+    opts = opts || {};
+    const payload = concat(files.map((f) => f.data));
+    const hash = new Uint8Array(await crypto.subtle.digest('SHA-256', payload));
+    let flags = 0, body = payload;
+    if (canZip && opts.compress !== false && payload.length > 64) {
+      const z = await streamBytes(payload, new CompressionStream('deflate-raw'));
+      if (z.length < payload.length * 0.95) { body = z; flags |= F_ZIP; }
+    }
+    const meta = {
+      v: 1,
+      f: files.map((f) => ({ n: f.name, t: f.type || 'application/octet-stream', s: f.data.length, m: f.message ? 1 : 0 })),
+      h: b64(hash),
+    };
+    const mj = te.encode(JSON.stringify(meta));
+    let inner = concat([Uint8Array.from(u32(mj.length)), mj, body]);
+    if (opts.passphrase) {
+      const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+      const key = await deriveKey(opts.passphrase, salt, ITER);
+      const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, inner));
+      inner = concat([salt, iv, Uint8Array.from(u32(ITER)), ct]);
+      flags |= F_ENC;
+    }
+    return concat([Uint8Array.from(MAGIC), Uint8Array.from([flags]), Uint8Array.from(u32(inner.length)), inner]);
+  }
+
+  // Parse what we can from the first bytes (file names before the transfer finishes).
+  function peek(prefix) {
+    if (!prefix || prefix.length < 9) return null;
+    for (let i = 0; i < 4; i++) if (prefix[i] !== MAGIC[i]) return { bad: true };
+    const flags = prefix[4], total = readU32(prefix, 5);
+    const out = { encrypted: !!(flags & F_ENC), compressed: !!(flags & F_ZIP), total: total + 9 };
+    if (out.encrypted || prefix.length < 13) return out;
+    const ml = readU32(prefix, 9);
+    if (ml > 0 && prefix.length >= 13 + ml) {
+      try { out.meta = JSON.parse(td.decode(prefix.subarray(13, 13 + ml))); } catch (e) { /* partial */ }
+    }
+    return out;
+  }
+
+  async function unpack(bytes, passphrase) {
+    for (let i = 0; i < 4; i++) if (bytes[i] !== MAGIC[i]) throw new Error('Not a SonicDrop transfer');
+    const flags = bytes[4], len = readU32(bytes, 5);
+    let inner = bytes.subarray(9, 9 + len);
+    if (flags & F_ENC) {
+      if (!passphrase) { const e = new Error('Passphrase required'); e.code = 'PASS'; throw e; }
+      const salt = inner.subarray(0, 16), iv = inner.subarray(16, 28), iter = readU32(inner, 28);
+      if (iter < 1000 || iter > MAX_ITER) throw new Error('Unsupported encryption parameters');
+      const key = await deriveKey(passphrase, salt, iter);
+      try {
+        inner = new Uint8Array(await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, inner.subarray(32)));
+      } catch (e) {
+        const err = new Error('Wrong passphrase'); err.code = 'PASS'; throw err;
+      }
+    }
+    const ml = readU32(inner, 0);
+    if (ml > inner.length - 4) throw new Error('Corrupted transfer');
+    const meta = JSON.parse(td.decode(inner.subarray(4, 4 + ml)));
+    if (!meta || !Array.isArray(meta.f) || meta.f.length > 1000) throw new Error('Corrupted transfer');
+    let declared = 0;
+    for (const f of meta.f) {
+      if (typeof f.n !== 'string' || !(f.s >= 0)) throw new Error('Corrupted transfer');
+      declared += f.s;
+    }
+    let payload = inner.subarray(4 + ml);
+    if (flags & F_ZIP) payload = await streamBytes(payload, new DecompressionStream('deflate-raw'), declared);
+    const hash = new Uint8Array(await crypto.subtle.digest('SHA-256', payload));
+    const verified = b64(hash) === meta.h;
+    const files = [];
+    let o = 0;
+    for (const f of meta.f) {
+      files.push({ name: f.n.slice(0, 255), type: String(f.t || ''), data: payload.subarray(o, o + f.s), message: !!f.m });
+      o += f.s;
+    }
+    return { files, verified, encrypted: !!(flags & F_ENC), compressed: !!(flags & F_ZIP) };
+  }
+
+  SD.container = { pack, unpack, peek };
+})(globalThis.SD = globalThis.SD || {});
+
+</script>
+<script>
+// SonicDrop UI: roles, file picking, audio I/O, live stats and visualizations.
+/* global SD */
+(function () {
+  'use strict';
+  const P = SD.params;
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html !== undefined) e.innerHTML = html; return e; };
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const LS = {
+    get(k, d) { try { const v = localStorage.getItem('sd.' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem('sd.' + k, JSON.stringify(v)); } catch (e) { /* private mode */ } },
+  };
+
+  const MODE_HINT = {
+    ultra: 'far away / noisy', robust: 'across a room', normal: '1–2 m', quick: 'about 1 m, held still',
+    fast: 'under 50 cm, still', turbo: 'very close, quiet', hyper: 'touching, quiet', cable: 'audio cable',
+  };
+  // Rough link SNR (dB, as measured by the receiver) each mode needs, from simulation.
+  const MODE_SNR = [0, 4, 6.5, 10];
+
+  // Received files come from whoever is transmitting nearby, so their claimed MIME type is untrusted.
+  // Only well-known passive types keep it; anything else (HTML, SVG, scripts...) becomes a plain
+  // download so it can never render inside this page's origin.
+  const SAFE_TYPES = /^(image\/(png|jpeg|webp|gif|avif|bmp|heic|heif)|application\/pdf|text\/plain|text\/csv|audio\/(mpeg|mp4|ogg|wav|webm|aac|flac)|video\/(mp4|webm|quicktime)|application\/(zip|x-zip-compressed|msword|vnd\.openxmlformats-officedocument\.[a-z.]+|vnd\.ms-excel|vnd\.ms-powerpoint|json|epub\+zip))$/i;
+  const safeType = (t) => (SAFE_TYPES.test(String(t || '')) ? String(t).toLowerCase() : 'application/octet-stream');
+
+  function fmtBytes(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1024 * 1024) return (n / 1024).toFixed(n < 10240 ? 1 : 0) + ' KB';
+    return (n / 1048576).toFixed(n < 10485760 ? 2 : 1) + ' MB';
+  }
+  function fmtDur(s) {
+    if (!isFinite(s)) return '–';
+    s = Math.max(0, Math.round(s));
+    if (s < 60) return s + ' s';
+    const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), r = s % 60;
+    return h ? `${h}:${String(m).padStart(2, '0')}:${String(r).padStart(2, '0')}` : `${m}:${String(r).padStart(2, '0')}`;
+  }
+  function fmtClock(s) { s = Math.max(0, Math.floor(s)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }
+  function fmtKbps(k) { return (k >= 10 ? k.toFixed(0) : k.toFixed(1)) + '<small> kbps</small>'; }
+  let toastT = 0;
+  function toast(msg, ms) {
+    const t = $('toast'); t.textContent = msg; t.hidden = false;
+    clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, ms || 3500);
+  }
+  function randSession() { return (crypto.getRandomValues(new Uint16Array(1))[0] | 1) & 0xFFFF; }
+
+  // ---------------- engine worker ----------------
+  let worker = null;
+  const handlers = {};
+  function engine() {
+    if (worker) return worker;
+    if (window.SD_BUNDLE) {
+      const url = URL.createObjectURL(new Blob([window.SD_BUNDLE.worker], { type: 'text/javascript' }));
+      worker = new Worker(url);
+    } else {
+      worker = new Worker('engine-worker.js');
+    }
+    worker.onmessage = (e) => { const fn = handlers[e.data.evt]; if (fn) fn(e.data); };
+    worker.onerror = (e) => { console.error(e); toast('Engine error: ' + (e.message || e)); };
+    worker.postMessage({ cmd: 'warmup' });
+    return worker;
+  }
+  handlers.error = (m) => { console.error(m.message); toast('Engine error, see console'); };
+
+  function workletURL() {
+    if (window.SD_BUNDLE) return URL.createObjectURL(new Blob([window.SD_BUNDLE.worklet], { type: 'text/javascript' }));
+    return 'capture-worklet.js';
+  }
+
+  // ---------------- wake lock ----------------
+  let wake = null;
+  async function keepAwake(on) {
+    try {
+      if (on && !wake && navigator.wakeLock) { wake = await navigator.wakeLock.request('screen'); wake.addEventListener('release', () => { wake = null; }); }
+      if (!on && wake) { await wake.release(); wake = null; }
+    } catch (e) { /* not available */ }
+  }
+
+  // ---------------- routing ----------------
+  const SCREENS = ['home', 'send', 'receive', 'test'];
+  let current = 'home';
+  function route() {
+    let name = location.hash.replace('#', '') || 'home';
+    if (!SCREENS.includes(name)) name = 'home';
+    if (current === 'send' && name !== 'send') stopTx();
+    if (current === 'test' && name !== 'test') stopTestTx();
+    if (current === 'receive' && name !== 'receive') stopRx();
+    current = name;
+    SCREENS.forEach((s) => $('screen-' + s).classList.toggle('active', s === name));
+    $('backBtn').hidden = name === 'home';
+    window.scrollTo(0, 0);
+    if (name !== 'home') engine();
+    if (name === 'send') renderModes();
+  }
+  window.addEventListener('hashchange', route);
+  $('backBtn').onclick = () => { location.hash = ''; };
+  document.querySelectorAll('[data-go]').forEach((b) => { b.onclick = () => { location.hash = b.dataset.go; }; });
+
+  // ---------------- audio output ----------------
+  class Player {
+    constructor() {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { /* iOS 17+ only */ }
+      this.ctx = new AC({ latencyHint: 'playback' });
+      this.ctx.resume();
+      this.gain = this.ctx.createGain();
+      this.analyser = this.ctx.createAnalyser();
+      this.analyser.fftSize = 2048;
+      this.analyser.smoothingTimeConstant = 0;
+      this.gain.connect(this.analyser);
+      this.analyser.connect(this.ctx.destination);
+      this.next = 0;
+      this.sched = [];
+      this.sources = new Set();
+    }
+    setVolume(v) { this.gain.gain.value = v; }
+    enqueue(samples, info) {
+      const ctx = this.ctx;
+      const buf = ctx.createBuffer(1, samples.length, P.fs);
+      if (buf.copyToChannel) buf.copyToChannel(samples, 0); else buf.getChannelData(0).set(samples);
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      src.connect(this.gain);
+      const t = Math.max(this.next, ctx.currentTime + 0.15);
+      src.start(t);
+      this.next = t + buf.duration;
+      this.sched.push({ start: t, end: this.next, info });
+      this.sources.add(src);
+      src.onended = () => this.sources.delete(src);
+    }
+    ahead() { return this.next - this.ctx.currentTime; }
+    now() { return this.ctx.currentTime; }
+    stop() {
+      this.sources.forEach((s) => { try { s.stop(); } catch (e) { /* already stopped */ } });
+      this.sources.clear();
+      try { this.ctx.close(); } catch (e) { /* closed */ }
+    }
+  }
+
+  // ---------------- waterfall ----------------
+  const PALETTE = (function () {
+    const stops = [[0, [5, 6, 10]], [0.22, [30, 27, 75]], [0.45, [124, 58, 237]], [0.7, [34, 211, 238]], [1, [240, 253, 255]]];
+    const p = new Uint8ClampedArray(256 * 3);
+    for (let i = 0; i < 256; i++) {
+      const x = i / 255;
+      let a = 0; while (a < stops.length - 2 && x > stops[a + 1][0]) a++;
+      const [x0, c0] = stops[a], [x1, c1] = stops[a + 1], t = (x - x0) / (x1 - x0);
+      for (let c = 0; c < 3; c++) p[i * 3 + c] = c0[c] + (c1[c] - c0[c]) * t;
+    }
+    return p;
+  })();
+
+  // Scrolling spectrogram. Fixed, small internal resolution (CSS scales it to a fixed height),
+  // capped at 30 fps, so it never grows and stays cheap on phones. Labels live in HTML.
+  const WF_COLS = 360, WF_ROWS = 120;
+  class Waterfall {
+    constructor(canvas) {
+      this.c = canvas; this.an = null; this.raf = 0; this.fmax = 17500; this.hi = 120; this.last = 0;
+      canvas.width = WF_COLS; canvas.height = WF_ROWS;
+      this.g = canvas.getContext('2d');
+      this.col = this.g.createImageData(1, WF_ROWS);
+      const wrap = document.createElement('div'); wrap.className = 'wf-wrap';
+      canvas.parentNode.insertBefore(wrap, canvas); wrap.append(canvas);
+      const pct = (f) => (1 - f / this.fmax) * 100 + '%';
+      for (const khz of [2, 5, 10, 15]) {
+        const l = document.createElement('span'); l.className = 'wf-label'; l.textContent = khz + ' kHz';
+        l.style.top = pct(khz * 1000); wrap.append(l);
+      }
+      const band = document.createElement('span'); band.className = 'wf-band';
+      band.style.top = pct(P.freqOf(P.U - 1));
+      band.style.height = ((P.freqOf(P.U - 1) - P.freqOf(0)) / this.fmax) * 100 + '%';
+      band.title = 'Data band'; wrap.append(band);
+    }
+    attach(analyser) {
+      this.an = analyser;
+      analyser.minDecibels = -120; analyser.maxDecibels = -10;
+      this.bins = new Uint8Array(analyser.frequencyBinCount);
+      this.hi = 120;
+    }
+    start() {
+      this.g.fillStyle = '#05060a'; this.g.fillRect(0, 0, WF_COLS, WF_ROWS);
+      const loop = (now) => {
+        this.raf = requestAnimationFrame(loop);
+        if (now - this.last < 32) return;
+        this.last = now;
+        this.draw();
+      };
+      cancelAnimationFrame(this.raf); this.raf = requestAnimationFrame(loop);
+    }
+    stop() { cancelAnimationFrame(this.raf); this.raf = 0; }
+    draw() {
+      if (!this.an) return;
+      const g = this.g, H = WF_ROWS, W = WF_COLS;
+      this.an.getByteFrequencyData(this.bins);
+      // Auto-range: map a window below the (slowly decaying) peak onto the palette.
+      let m = 0;
+      for (let i = 0; i < this.bins.length; i++) if (this.bins[i] > m) m = this.bins[i];
+      this.hi = Math.max(this.hi * 0.995, m, 60);
+      const hi = this.hi, lo = hi - 130, span = hi - lo;
+      g.drawImage(this.c, -1, 0);
+      const binHz = this.an.context.sampleRate / this.an.fftSize, d = this.col.data;
+      const fStep = this.fmax / H;
+      for (let y = 0; y < H; y++) {
+        // Peak of the bins covered by this row, so narrow tones don't vanish.
+        const b0 = Math.floor(((H - 1 - y) * fStep) / binHz), b1 = Math.min(this.bins.length - 1, Math.floor(((H - y) * fStep) / binHz));
+        let raw = 0;
+        for (let k = b0; k <= b1; k++) if (this.bins[k] > raw) raw = this.bins[k];
+        const v = Math.max(0, Math.min(255, Math.round(((raw - lo) / span) * 200)));
+        const o = y * 4;
+        d[o] = PALETTE[v * 3]; d[o + 1] = PALETTE[v * 3 + 1]; d[o + 2] = PALETTE[v * 3 + 2]; d[o + 3] = 255;
+      }
+      g.putImageData(this.col, W - 1, 0);
+    }
+  }
+
+  // ---------------- small canvases ----------------
+  function setupCanvas(c) {
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    const w = c.clientWidth || c.width, h = c.clientHeight || c.height;
+    if (c.width !== Math.floor(w * dpr)) { c.width = Math.floor(w * dpr); c.height = Math.floor(h * dpr); }
+    const g = c.getContext('2d');
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { g, w, h };
+  }
+
+  function drawConstellation(points, modeId) {
+    const c = $('consCanvas'); if (!c.offsetParent) return;
+    const { g, w, h } = setupCanvas(c);
+    g.fillStyle = '#05060a'; g.fillRect(0, 0, w, h);
+    const R = 1.45, sx = (x) => ((x + R) / (2 * R)) * w, sy = (y) => ((R - y) / (2 * R)) * h;
+    g.strokeStyle = '#1b2030'; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(w / 2, 0); g.lineTo(w / 2, h); g.moveTo(0, h / 2); g.lineTo(w, h / 2); g.stroke();
+    const mode = P.modes[modeId];
+    // Ideal points.
+    const bps = mode.bps;
+    let ideal = [];
+    if (bps === 1) ideal = [[1, 0], [-1, 0]];
+    else {
+      const L = 1 << (bps / 2), s = 1 / Math.sqrt((2 * (L * L - 1)) / 3);
+      for (let i = 0; i < L; i++) for (let q = 0; q < L; q++) ideal.push([(2 * i - L + 1) * s, (2 * q - L + 1) * s]);
+    }
+    g.strokeStyle = 'rgba(167,139,250,.55)';
+    const r = Math.max(2, Math.min(6, (w / (1 << Math.ceil(bps / 2))) * 0.18));
+    for (const [x, y] of ideal) { g.beginPath(); g.arc(sx(x), sy(y), r, 0, 6.283); g.stroke(); }
+    g.fillStyle = 'rgba(34,211,238,.55)';
+    for (let i = 0; i < points.length; i += 2) g.fillRect(sx(points[i]) - 0.8, sy(points[i + 1]) - 0.8, 1.6, 1.6);
+  }
+
+  function drawSnr(bins) {
+    const c = $('snrCanvas'); if (!c.offsetParent) return;
+    const { g, w, h } = setupCanvas(c);
+    g.fillStyle = '#05060a'; g.fillRect(0, 0, w, h);
+    const max = 40, bw = w / bins.length;
+    for (let i = 0; i < bins.length; i++) {
+      const v = Math.max(0, Math.min(max, bins[i])), bh = (v / max) * (h - 18);
+      const t = v / max;
+      g.fillStyle = t > 0.45 ? '#22d3ee' : t > 0.25 ? '#a78bfa' : t > 0.12 ? '#fbbf24' : '#f87171';
+      g.fillRect(i * bw + 1, h - 14 - bh, Math.max(1, bw - 2), bh);
+    }
+    g.fillStyle = '#8b93a8'; g.font = '10px ui-monospace, monospace';
+    g.fillText('1 kHz', 2, h - 3); g.fillText('8 kHz', w / 2 - 14, h - 3); g.fillText('16 kHz', w - 38, h - 3);
+    g.fillText('40 dB', 2, 10);
+  }
+
+  function drawSpark(c, vals) {
+    const { g, w, h } = setupCanvas(c);
+    g.clearRect(0, 0, w, h);
+    if (vals.length < 2) return;
+    const max = Math.max(...vals, 1);
+    g.strokeStyle = '#22d3ee'; g.lineWidth = 1.5; g.beginPath();
+    vals.forEach((v, i) => { const x = (i / (vals.length - 1)) * w, y = h - 2 - (v / max) * (h - 4); i ? g.lineTo(x, y) : g.moveTo(x, y); });
+    g.stroke();
+  }
+
+  function drawGrid(c, known, K, done) {
+    const w = c.clientWidth || 300;
+    const cols = Math.max(8, Math.min(K, Math.floor(w / (K > 2000 ? 4 : K > 500 ? 7 : 12))));
+    const rows = Math.ceil(K / cols), cell = w / cols;
+    const hCss = Math.min(window.innerWidth < 640 ? 84 : 150, Math.max(14, rows * cell));
+    c.style.height = hCss + 'px';
+    const { g } = setupCanvas(c);
+    const ch = hCss / rows;
+    g.clearRect(0, 0, w, hCss);
+    const gap = cell > 6 ? 1.5 : 0.5;
+    for (let i = 0; i < K; i++) {
+      const x = (i % cols) * cell, y = Math.floor(i / cols) * ch;
+      g.fillStyle = known[i] ? (done ? '#34d399' : '#22d3ee') : '#1a1f2d';
+      g.fillRect(x + gap / 2, y + gap / 2, cell - gap, ch - gap);
+    }
+  }
+
+  // ================= SEND =================
+  const send = { files: [], imgQ: LS.get('imgQ', 'medium'), mode: Math.min(LS.get('mode', 2), P.modes.length - 1), player: null, wf: new Waterfall($('txWaterfall')), active: false, est: 0 };
+  const IMG_Q = { large: [2048, 0.82], medium: [1280, 0.72], small: [720, 0.6] };
+
+  $('drop').onclick = () => $('fileInput').click();
+  $('drop').onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('fileInput').click(); } };
+  $('fileInput').onchange = (e) => { addFiles(e.target.files); e.target.value = ''; };
+  ['dragenter', 'dragover'].forEach((t) => $('drop').addEventListener(t, (e) => { e.preventDefault(); $('drop').classList.add('over'); }));
+  ['dragleave', 'drop'].forEach((t) => $('drop').addEventListener(t, (e) => { e.preventDefault(); $('drop').classList.remove('over'); }));
+  $('drop').addEventListener('drop', (e) => addFiles(e.dataTransfer.files));
+  document.addEventListener('paste', (e) => {
+    if (current !== 'send' || send.active) return;
+    const fs = [...(e.clipboardData && e.clipboardData.files || [])];
+    if (fs.length) { e.preventDefault(); addFiles(fs); }
+  });
+  $('msgInput').oninput = () => updatePayload();
+  $('volInput').oninput = () => {
+    $('volVal').textContent = $('volInput').value + '%';
+    if (send.player) send.player.setVolume($('volInput').value / 100);
+    if (test.player) test.player.setVolume($('volInput').value / 100);
+  };
+  $('imgSeg').querySelectorAll('button').forEach((b) => {
+    b.classList.toggle('on', b.dataset.q === send.imgQ);
+    b.onclick = () => {
+      send.imgQ = b.dataset.q; LS.set('imgQ', send.imgQ);
+      $('imgSeg').querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === b));
+      updatePayload();
+    };
+  });
+
+  function isShrinkable(f) { return /^image\/(jpeg|png|webp|bmp|heic|heif|avif)$/i.test(f.type); }
+
+  function addFiles(list) {
+    for (const file of list) {
+      send.files.push({ file, name: file.name || 'file', type: file.type || 'application/octet-stream', size: file.size, img: isShrinkable(file), thumb: file.type.startsWith('image/') ? URL.createObjectURL(file) : null, variants: {} });
+    }
+    renderFiles(); updatePayload();
+  }
+
+  function renderFiles() {
+    const box = $('fileList'); box.innerHTML = '';
+    send.files.forEach((f, i) => {
+      const row = el('div', 'file');
+      const th = el('div', 'th', f.thumb ? '' : esc((f.name.split('.').pop() || '').slice(0, 4)));
+      if (f.thumb) th.style.backgroundImage = `url("${f.thumb}")`;
+      const v = f.img && send.imgQ !== 'original' ? f.variants[send.imgQ] : null;
+      const meta = el('div', 'meta', `<div class="nm">${esc(f.name)}</div><div class="sz">${fmtBytes(f.size)}${v ? ` → ${fmtBytes(v.data.length)}` : ''}</div>`);
+      const rm = el('button', 'rm', '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>');
+      rm.setAttribute('aria-label', 'Remove ' + f.name);
+      rm.onclick = () => { if (f.thumb) URL.revokeObjectURL(f.thumb); send.files.splice(i, 1); renderFiles(); updatePayload(); };
+      row.append(th, meta, rm);
+      box.append(row);
+    });
+    $('imgOpt').hidden = !send.files.some((f) => f.img);
+  }
+
+  async function shrink(f, q) {
+    const [maxDim, quality] = IMG_Q[q];
+    let bmp;
+    try { bmp = await createImageBitmap(f.file, { imageOrientation: 'from-image' }); } catch (e) { return null; }
+    const s = Math.min(1, maxDim / Math.max(bmp.width, bmp.height));
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(bmp.width * s)); c.height = Math.max(1, Math.round(bmp.height * s));
+    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+    if (bmp.close) bmp.close();
+    let blob = await new Promise((r) => c.toBlob(r, 'image/webp', quality));
+    if (!blob || blob.type !== 'image/webp') blob = await new Promise((r) => c.toBlob(r, 'image/jpeg', quality));
+    if (!blob) return null;
+    const ext = blob.type === 'image/webp' ? 'webp' : 'jpg';
+    return { data: new Uint8Array(await blob.arrayBuffer()), type: blob.type, name: f.name.replace(/\.[^.]+$/, '') + '.' + ext };
+  }
+
+  async function fileData(f) {
+    if (f.img && send.imgQ !== 'original') {
+      if (!f.variants[send.imgQ]) f.variants[send.imgQ] = (await shrink(f, send.imgQ)) || 'orig';
+      const v = f.variants[send.imgQ];
+      if (v !== 'orig' && v.data.length < f.size) return v;
+    }
+    return { data: new Uint8Array(await f.file.arrayBuffer()), type: f.type, name: f.name };
+  }
+
+  let payloadSeq = 0;
+  async function updatePayload() {
+    const seq = ++payloadSeq;
+    const msg = $('msgInput').value;
+    let bytes = new TextEncoder().encode(msg).length;
+    for (const f of send.files) {
+      if (f.img && send.imgQ !== 'original') {
+        if (!f.variants[send.imgQ]) {
+          $('payloadInfo').textContent = 'Optimizing photos…';
+          f.variants[send.imgQ] = (await shrink(f, send.imgQ)) || 'orig';
+          if (seq !== payloadSeq) return;
+          renderFiles();
+        }
+        const v = f.variants[send.imgQ];
+        bytes += v !== 'orig' && v.data.length < f.size ? v.data.length : f.size;
+      } else bytes += f.size;
+    }
+    if (seq !== payloadSeq) return;
+    const has = send.files.length > 0 || msg.trim().length > 0;
+    send.est = has ? bytes + 120 + send.files.length * 40 : 0;
+    $('payloadInfo').textContent = !has ? 'Nothing selected yet' : send.est > MAX_SEND ? `${fmtBytes(send.est)}: too big (limit ${fmtBytes(MAX_SEND)})` : `${fmtBytes(send.est)} to send`;
+    $('txBtn').disabled = !has;
+    renderModes();
+  }
+
+  const MAX_SEND = 5 * 1024 * 1024;   // receivers cap transfers at 40k blocks (~5.2 MB)
+
+  function etaFor(mode, bytes) {
+    if (!bytes) return null;
+    const K = Math.ceil(bytes / mode.blockSize);
+    return Math.ceil((K * 1.03) / mode.cws) * mode.frameSeconds;
+  }
+
+  function renderModes() {
+    const box = $('modeList'); box.innerHTML = '';
+    const reco = LS.get('reco', null);
+    P.modes.forEach((m) => {
+      const b = el('button', 'mode' + (m.id === send.mode ? ' on' : ''));
+      const eta = etaFor(m, send.est);
+      const bars = Array.from({ length: P.modes.length }, (_, i) => `<i class="${i <= m.id ? 'f' : ''}" style="height:${4 + i * 3}px"></i>`).join('');
+      b.innerHTML = `<span class="mn">${m.name}${reco === m.id ? '<span class="badge">TESTED</span>' : ''}</span><span class="mk">${m.kbps.toFixed(m.kbps < 10 ? 1 : 0)} kbps</span>` +
+        `<span class="mt">${eta ? '≈ ' + fmtDur(eta) : MODE_HINT[m.key]}</span><span class="mx">${m.mod} · ${eta ? MODE_HINT[m.key] : m.rate}</span>` +
+        `<span class="bars">${bars}</span>`;
+      b.title = `${m.mod}, LDPC rate ${m.rate}. Works best: ${MODE_HINT[m.key]}`;
+      b.onclick = () => { send.mode = m.id; LS.set('mode', m.id); renderModes(); };
+      box.append(b);
+    });
+  }
+
+  $('txBtn').onclick = startTx;
+  $('txStop').onclick = () => stopTx();
+
+  async function startTx() {
+    if (send.active) return;
+    const player = new Player();             // must be created inside the click for autoplay rules
+    player.setVolume($('volInput').value / 100);
+    send.player = player;
+    send.active = true;
+    $('txBtn').disabled = true;
+    try {
+      const files = [];
+      for (const f of send.files) files.push(await fileData(f));
+      const msg = $('msgInput').value;
+      if (msg.trim()) files.push({ name: 'message.txt', type: 'text/plain', data: new TextEncoder().encode(msg), message: true });
+      const pass = $('passInput').value;
+      const bytes = await SD.container.pack(files, { passphrase: pass || null });
+      if (!send.active) return;
+      if (bytes.length > MAX_SEND) {
+        toast(`That's ${fmtBytes(bytes.length)} after compression. The limit is ${fmtBytes(MAX_SEND)} (it would take too long over sound). Try smaller photos.`, 6000);
+        stopTx();
+        return;
+      }
+      const mode = P.modes[send.mode];
+      send.session = randSession();
+      send.K = 0; send.frames = 0; send.req = false; send.bytes = bytes.length;
+      const names = files.map((f) => f.name);
+      $('txWhat').textContent = `${names.length > 1 ? names.length + ' items' : names[0]} · ${fmtBytes(bytes.length)}${pass ? ' · encrypted' : ''}`;
+      $('txRate').innerHTML = fmtKbps(mode.kbps);
+      $('txPackets').textContent = '0';
+      $('txBar').style.width = '0%';
+      $('sendCompose').hidden = true; $('sendLive').hidden = false;
+      send.wf.attach(player.analyser); send.wf.start();
+      keepAwake(true);
+      handlers['tx-ready'] = (m) => {
+        if (!send.active) return;
+        send.K = m.K;
+        $('txPass').textContent = fmtDur(Math.ceil(m.K / m.cws) * m.frameSeconds);
+        pump();
+      };
+      handlers['tx-frame'] = (m) => {
+        send.req = false;
+        if (!send.active) return;
+        send.player.enqueue(m.samples, m.info);
+        send.frames++;
+        pump();
+      };
+      engine().postMessage({ cmd: 'tx-start', data: bytes.buffer, mode: mode.id, session: send.session, amp: 0.3 }, [bytes.buffer]);
+      send.timer = setInterval(() => { pump(); txTick(); }, 200);
+    } catch (e) {
+      console.error(e);
+      toast('Could not prepare transfer: ' + e.message);
+      stopTx();
+    }
+  }
+
+  function pump() {
+    if (!send.active || send.req || !send.K) return;
+    if (send.player.ahead() < 1.8) { send.req = true; engine().postMessage({ cmd: 'tx-frames', count: 1 }); }
+  }
+
+  function txTick() {
+    const pl = send.player; if (!pl) return;
+    const now = pl.now();
+    const first = pl.sched[0];
+    if (!first) return;
+    $('txElapsed').textContent = fmtClock(now - first.start);
+    let sent = 0;
+    for (const s of pl.sched) { if (s.end <= now) sent += s.info.cws; else if (s.start < now) sent += Math.floor(s.info.cws * (now - s.start) / (s.end - s.start)); }
+    $('txPackets').textContent = sent.toLocaleString();
+    const pct = send.K ? (sent / send.K) * 100 : 0;
+    $('txBar').style.width = Math.min(100, pct) + '%';
+    $('txHint').textContent = pct >= 100
+      ? `Every block has gone out ${Math.floor(pct / 100)}× · still sending repair packets until you stop. The receiver usually finishes around 100–110%.`
+      : `Sent ${pct.toFixed(0)}% of one full pass. Receivers can start listening at any moment.`;
+  }
+
+  function stopTx() {
+    if (!send.active && !send.player) return;
+    send.active = false;
+    clearInterval(send.timer);
+    send.wf.stop();
+    if (send.player) send.player.stop();
+    send.player = null;
+    if (worker) worker.postMessage({ cmd: 'tx-stop' });
+    keepAwake(false);
+    $('sendCompose').hidden = false; $('sendLive').hidden = true;
+    $('txBtn').disabled = !(send.files.length || $('msgInput').value.trim());
+  }
+
+  // ================= SPEED TEST (sender side) =================
+  const test = { player: null, active: false, wf: new Waterfall($('testWaterfall')) };
+  $('testPlayBtn').onclick = startTestTx;
+  $('testMeasureBtn').onclick = () => { location.hash = 'receive'; setTimeout(() => { if (!recv.active) startRx(); }, 50); };
+  $('testStop').onclick = stopTestTx;
+
+  // Speed-test button text follows the mode table (2 frames per mode).
+  $('testPlayDesc').textContent = `This device sends all ${P.modes.length} speeds in turn (about ${Math.round(P.modes.reduce((a, m) => a + 2 * m.frameSeconds, 0))} seconds).`;
+
+  function renderTestSteps(curStep, doneUpTo) {
+    const box = $('testSteps'); box.innerHTML = '';
+    P.modes.forEach((m, i) => {
+      box.append(el('div', 'tstep' + (i === curStep ? ' cur' : i < doneUpTo ? ' done' : ''), `<b>${m.name}</b><br>${m.kbps.toFixed(m.kbps < 10 ? 1 : 0)} kbps`));
+    });
+  }
+
+  function startTestTx() {
+    if (test.active) return;
+    const player = new Player();
+    player.setVolume($('volInput').value / 100);
+    test.player = player; test.active = true; test.req = false; test.ended = false; test.ready = false;
+    $('testTx').hidden = false;
+    renderTestSteps(-1, 0);
+    test.wf.attach(player.analyser); test.wf.start();
+    keepAwake(true);
+    handlers['tx-ready'] = (m) => { test.ready = true; $('testTxWhat').textContent = `≈ ${fmtDur(m.seconds)}`; testPump(); };
+    handlers['tx-frame'] = (m) => { test.req = false; if (!test.active) return; test.player.enqueue(m.samples, m.info); testPump(); };
+    handlers['tx-end'] = () => { test.req = false; test.ended = true; };
+    engine().postMessage({ cmd: 'tx-start', test: true, session: randSession(), amp: 0.3 });
+    test.timer = setInterval(() => {
+      testPump();
+      const pl = test.player; if (!pl) return;
+      const now = pl.now();
+      const cur = pl.sched.find((s) => s.start <= now && s.end > now);
+      const last = pl.sched[pl.sched.length - 1];
+      if (cur) renderTestSteps(cur.info.step, cur.info.step);
+      if (test.ended && last && now > last.end + 0.3) {
+        renderTestSteps(-1, 99);
+        toast('Test signal finished. Results are on the measuring device.');
+        stopTestTx(true);
+      }
+    }, 200);
+  }
+  function testPump() {
+    if (!test.active || test.req || test.ended || !test.ready) return;
+    if (test.player.ahead() < 1.8) { test.req = true; engine().postMessage({ cmd: 'tx-frames', count: 1 }); }
+  }
+  function stopTestTx(keepSteps) {
+    if (!test.active) return;
+    test.active = false;
+    clearInterval(test.timer);
+    test.wf.stop();
+    if (test.player) test.player.stop();
+    test.player = null;
+    if (worker) worker.postMessage({ cmd: 'tx-stop' });
+    keepAwake(false);
+    if (keepSteps !== true) $('testTx').hidden = true;
+  }
+
+  // ================= RECEIVE =================
+  const recv = { active: false, wf: new Waterfall($('rxWaterfall')), transfers: new Map(), ignored: new Set(), speed: [], spark: [], frames: 0, okFrames: 0, test: null, lastFrameT: -1 };
+
+  $('rxBtn').onclick = startRx;
+  $('rxStop').onclick = () => stopRx();
+
+  async function startRx() {
+    if (recv.active) return;
+    $('rxErr').hidden = true;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    let ctx;
+    try {
+      ctx = new AC();
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw Object.assign(new Error('Microphone needs a secure page (https:// or localhost).'), { name: 'Insecure' });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false, channelCount: 1, voiceIsolation: false },
+      });
+      await ctx.resume();
+      recv.ctx = ctx; recv.stream = stream;
+      const src = ctx.createMediaStreamSource(stream);
+      const an = ctx.createAnalyser(); an.fftSize = 2048; an.smoothingTimeConstant = 0;
+      src.connect(an);
+      const sink = ctx.createGain(); sink.gain.value = 0; sink.connect(ctx.destination);
+      recv.rec = { buf: new Float32Array(Math.round(ctx.sampleRate * 30)), pos: 0, filled: false, rate: ctx.sampleRate };
+      const toEngine = (samples) => {
+        if (!recv.active) return;
+        const r = recv.rec, n = samples.length;
+        for (let i = 0; i < n; i++) { r.buf[r.pos++] = samples[i]; if (r.pos === r.buf.length) { r.pos = 0; r.filled = true; } }
+        engine().postMessage({ cmd: 'rx-audio', samples }, [samples.buffer]);
+      };
+      let worklet = false;
+      if (ctx.audioWorklet) {
+        try {
+          await ctx.audioWorklet.addModule(workletURL());
+          worklet = true;
+        } catch (e) {
+          console.warn('AudioWorklet unavailable here (e.g. opened as a local file), using ScriptProcessor', e);
+        }
+      }
+      if (worklet) {
+        const node = new AudioWorkletNode(ctx, 'sd-capture', { numberOfInputs: 1, numberOfOutputs: 1, channelCount: 1, channelCountMode: 'explicit' });
+        node.port.onmessage = (e) => toEngine(e.data);
+        src.connect(node); node.connect(sink);
+        recv.node = node;
+      } else {
+        const sp = ctx.createScriptProcessor(4096, 1, 1);
+        sp.onaudioprocess = (e) => toEngine(new Float32Array(e.inputBuffer.getChannelData(0)));
+        src.connect(sp); sp.connect(sink);
+        recv.node = sp;
+      }
+      engine().postMessage({ cmd: 'rx-start', rate: ctx.sampleRate });
+      recv.active = true;
+      recv.speed = []; recv.spark = []; recv.frames = 0; recv.okFrames = 0; recv.lastFrameT = -1;
+      $('recvIdle').hidden = true; $('recvLive').hidden = false;
+      recv.wf.attach(an); recv.wf.start();
+      setRxState('idle', 'Listening…');
+      keepAwake(true);
+      const track = stream.getAudioTracks()[0];
+      const st = track && track.getSettings ? track.getSettings() : {};
+      $('diagText').textContent = `Mic at ${ctx.sampleRate} Hz${st.echoCancellation ? ' · echo cancellation could not be disabled' : ''}${st.autoGainControl ? ' · auto gain on' : ''}`;
+      recv.tick = setInterval(rxTick, 500);
+    } catch (e) {
+      console.error(e);
+      try { if (ctx) ctx.close(); } catch (x) { /* ignore */ }
+      const msg = e.name === 'NotAllowedError' ? 'Microphone permission was denied. Allow it in the browser settings and try again.'
+        : e.name === 'Insecure' ? e.message
+        : e.name === 'NotFoundError' ? 'No microphone found on this device.'
+        : 'Could not start the microphone: ' + e.message;
+      $('rxErr').textContent = msg; $('rxErr').hidden = false;
+    }
+  }
+
+  function stopRx() {
+    if (!recv.active) return;
+    recv.active = false;
+    clearInterval(recv.tick);
+    recv.wf.stop();
+    try { recv.stream.getTracks().forEach((t) => t.stop()); } catch (e) { /* ignore */ }
+    try { recv.ctx.close(); } catch (e) { /* ignore */ }
+    if (worker) worker.postMessage({ cmd: 'rx-stop' });
+    keepAwake(false);
+    $('recvIdle').hidden = false; $('recvLive').hidden = true;
+  }
+
+  // Debug: save the last 30 s of raw microphone audio as a WAV (for offline analysis).
+  $('recBtn').onclick = () => {
+    const r = recv.rec; if (!r) return;
+    const n = r.filled ? r.buf.length : r.pos;
+    const pcm = new DataView(new ArrayBuffer(44 + n * 2));
+    const w = (o, str) => { for (let i = 0; i < str.length; i++) pcm.setUint8(o + i, str.charCodeAt(i)); };
+    w(0, 'RIFF'); pcm.setUint32(4, 36 + n * 2, true); w(8, 'WAVEfmt '); pcm.setUint32(16, 16, true); pcm.setUint16(20, 1, true);
+    pcm.setUint16(22, 1, true); pcm.setUint32(24, r.rate, true); pcm.setUint32(28, r.rate * 2, true); pcm.setUint16(32, 2, true);
+    pcm.setUint16(34, 16, true); w(36, 'data'); pcm.setUint32(40, n * 2, true);
+    const start = r.filled ? r.pos : 0;
+    for (let i = 0; i < n; i++) {
+      const v = r.buf[(start + i) % r.buf.length];
+      pcm.setInt16(44 + i * 2, Math.max(-32768, Math.min(32767, Math.round(v * 32767))), true);
+    }
+    const a = el('a'); a.href = URL.createObjectURL(new Blob([pcm], { type: 'audio/wav' }));
+    a.download = `sonicdrop-mic-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.wav`;
+    document.body.append(a); a.click(); a.remove();
+  };
+
+  function setRxState(kind, text) {
+    const p = $('rxPill');
+    p.className = 'pill ' + kind;
+    $('rxState').textContent = text;
+  }
+
+  handlers['rx-status'] = (m) => {
+    if (!recv.active) return;
+    recv.t = m.t;
+    const db = 20 * Math.log10(m.level + 1e-9);
+    $('rxLevel').style.width = Math.max(0, Math.min(100, ((db + 70) / 60) * 100)) + '%';
+    if (m.busy) setRxState('lock', 'Receiving frame…');
+    else if (recv.lastFrameT > 0 && m.t - recv.lastFrameT < 3) { /* keep locked label */ }
+    else setRxState('idle', db < -62 ? 'Listening… (very quiet, check the mic)' : 'Listening…');
+  };
+  handlers['rx-header'] = (m) => {
+    const mode = P.modes[m.header.mode];
+    setRxState('lock', `Locked · ${mode.name}${m.header.flags & 1 ? ' (speed test)' : ''}`);
+    $('rxMode').innerHTML = `${mode.name}<small> ${mode.mod}</small>`;
+  };
+  handlers['rx-syncfail'] = () => { /* weak sync: ignore quietly */ };
+
+  function frameStats(m) {
+    const s = m.stats, mode = P.modes[s.mode];
+    recv.frames++;
+    if (s.ok === s.total) recv.okFrames++;
+    recv.lastFrameT = m.t;
+    $('rxFrames').innerHTML = `${recv.okFrames}<small>/${recv.frames}</small>`;
+    const q = s.snr < 6 ? 'weak' : s.snr < 12 ? 'fair' : s.snr < 18 ? 'good' : 'excellent';
+    $('rxSnr').innerHTML = `${s.snr.toFixed(0)}<small> dB ${q}</small>`;
+    let best = 0;
+    MODE_SNR.forEach((need, i) => { if (i < P.modes.length && s.snr >= need + 1) best = i; });
+    $('diagText').textContent = `${mode.name} · ${mode.mod} rate ${mode.rate} · ${s.ok}/${s.total} codewords OK · ` +
+      `pre-FEC errors ${s.rawBer === null ? '–' : (s.rawBer * 100).toFixed(2) + '%'} · clock offset ${s.ppm.toFixed(0)} ppm · ` +
+      `this link looks good for up to ${P.modes[best].name}`;
+    drawConstellation(s.constellation, s.mode);
+    drawSnr(s.snrBins);
+  }
+
+  function pushSpeed(t, bytes) {
+    recv.speed.push({ t, bytes });
+    while (recv.speed.length && t - recv.speed[0].t > 8) recv.speed.shift();
+  }
+  function rxTick() {
+    if (!recv.active) return;
+    const t = recv.t || 0;
+    while (recv.speed.length && t - recv.speed[0].t > 8) recv.speed.shift();
+    let kbps = 0;
+    if (recv.speed.length && t - recv.lastFrameT < 4) {
+      const span = Math.max(2, t - recv.speed[0].t + 1);
+      kbps = recv.speed.reduce((a, s) => a + s.bytes, 0) * 8 / span / 1000;
+    }
+    $('rxSpeed').innerHTML = kbps ? fmtKbps(kbps) : '–';
+    recv.spark.push(kbps); if (recv.spark.length > 40) recv.spark.shift();
+    drawSpark($('rxSpark'), recv.spark);
+  }
+
+  // ---- transfers ----
+  const MAX_CARDS = 6;
+  function removeTransfer(session) {
+    const T = recv.transfers.get(session);
+    if (!T) return;
+    T.urls.forEach((u) => URL.revokeObjectURL(u));
+    T.card.remove();
+    recv.transfers.delete(session);
+    recv.ignored.add(session);   // late frames of a deleted transfer are ignored
+    updateXferBar();
+  }
+  function updateXferBar() {
+    const n = recv.transfers.size, done = [...recv.transfers.values()].filter((T) => T.done).length;
+    $('xferBar').hidden = n === 0;
+    $('xferCount').textContent = `${done} received${n > done ? ` · ${n - done} in progress` : ''}`;
+  }
+  $('clearAll').onclick = () => {
+    const anyDone = [...recv.transfers.values()].some((T) => T.done);
+    if (anyDone && !confirm('Remove all received files from this page? Download anything you want to keep first.')) return;
+    [...recv.transfers.keys()].forEach(removeTransfer);
+    toast('Cleared');
+  };
+  handlers['rx-new'] = (m) => {
+    if (recv.ignored.has(m.session)) return;
+    const T = { session: m.session, K: m.K, mode: m.mode, blockSize: m.blockSize, startT: m.t, meta: null, peek: null, done: false, known: new Uint8Array(m.K), rank: 0, bytes: 0, urls: [] };
+    // Older transfers collapse to a compact row; only the last few are kept.
+    for (const old of recv.transfers.values()) {
+      old.card.classList.add('compact');
+      const tg = old.card.querySelector('.xfer-toggle'); tg.hidden = false; tg.textContent = 'Show';
+    }
+    recv.transfers.set(m.session, T);
+    while (recv.transfers.size > MAX_CARDS) removeTransfer(recv.transfers.keys().next().value);
+    const card = el('div', 'card xfer');
+    card.innerHTML = `<div class="xfer-head"><div class="xfer-ic"><svg viewBox="0 0 24 24" width="24" height="24"><path d="M12 4v12M7 11l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>` +
+      `<div style="min-width:0;flex:1"><div class="xfer-title">Incoming transfer</div><div class="xfer-sub">starting…</div></div>` +
+      `<button class="btn xfer-toggle" hidden>Show</button>` +
+      `<button class="icon-btn xfer-del" aria-label="Delete" title="Delete"><svg viewBox="0 0 24 24" width="17" height="17"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>` +
+      `<div class="bar"><div class="bar-fill"></div></div><canvas class="grid-canvas"></canvas><div class="xfer-body"></div>`;
+    card.querySelector('.xfer-toggle').onclick = () => {
+      card.classList.toggle('compact');
+      card.querySelector('.xfer-toggle').textContent = card.classList.contains('compact') ? 'Show' : 'Hide';
+    };
+    card.querySelector('.xfer-del').onclick = () => removeTransfer(m.session);
+    T.card = card;
+    $('xferList').prepend(card);
+    updateXferBar();
+    toast('Incoming transfer detected');
+  };
+
+  handlers['rx-frame'] = (m) => {
+    if (!recv.active) return;
+    frameStats(m);
+    const T = recv.transfers.get(m.session);
+    if (!T) return;
+    pushSpeed(m.t, m.progress.gainedBytes);
+    T.known = m.progress.known; T.rank = m.progress.rank; T.lastT = m.t;
+    T.bytes = T.rank * T.blockSize;
+    if (m.head && !T.meta) {
+      const pk = SD.container.peek(m.head);
+      if (pk && !pk.bad) {
+        T.peek = pk;
+        if (pk.meta) T.meta = pk.meta;
+      }
+    }
+    renderTransfer(T);
+  };
+
+  function transferTitle(T) {
+    if (T.meta) {
+      const f = T.meta.f;
+      if (f.length === 1) return f[0].m ? 'Message' : f[0].n;
+      return `${f.length} items · ${f.filter((x) => !x.m).map((x) => x.n).slice(0, 2).join(', ')}${f.length > 2 ? '…' : ''}`;
+    }
+    if (T.peek && T.peek.encrypted) return '🔒 Encrypted transfer';
+    return 'Incoming transfer';
+  }
+
+  function renderTransfer(T) {
+    const card = T.card, mode = P.modes[T.mode];
+    card.querySelector('.xfer-title').textContent = transferTitle(T);
+    const total = T.peek ? T.peek.total : T.K * T.blockSize;
+    const pct = Math.min(100, (T.rank / T.K) * 100);
+    card.querySelector('.bar-fill').style.width = pct + '%';
+    if (!T.done) {
+      const elapsed = (T.lastT || T.startT) - T.startT + mode.frameSeconds;
+      const rate = T.rank / Math.max(elapsed, mode.frameSeconds);   // blocks per second
+      const eta = rate > 0 ? (T.K - T.rank) / rate : Infinity;
+      card.querySelector('.xfer-sub').textContent = `${pct.toFixed(0)}% · ${fmtBytes(Math.min(total, T.bytes))} of ${fmtBytes(total)} · ${mode.name} · ETA ${fmtDur(eta)}`;
+    }
+    drawGrid(card.querySelector('.grid-canvas'), T.known, T.K, T.done);
+  }
+
+  handlers['rx-done'] = async (m) => {
+    const T = recv.transfers.get(m.session);
+    if (!T) return;
+    T.done = true; T.data = new Uint8Array(m.data); T.doneT = m.t;
+    T.known = new Uint8Array(T.K).fill(1); T.rank = T.K;
+    renderTransfer(T);
+    const secs = m.t - T.startT + P.modes[T.mode].frameSeconds;
+    T.avgKbps = (T.data.length * 8) / secs / 1000;
+    T.card.querySelector('.xfer-ic').classList.add('done');
+    await openTransfer(T, null);
+  };
+
+  async function openTransfer(T, pass) {
+    const body = T.card.querySelector('.xfer-body');
+    const total = T.peek ? T.peek.total : T.data.length;
+    const bytes = T.data.subarray(0, total);
+    let res;
+    try {
+      res = await SD.container.unpack(bytes, pass);
+    } catch (e) {
+      if (e.code === 'PASS') {
+        T.card.querySelector('.xfer-title').textContent = '🔒 Encrypted transfer';
+        T.card.querySelector('.xfer-sub').textContent = `Received ${fmtBytes(total)} · enter the passphrase to unlock`;
+        body.innerHTML = `<div class="passbox"><input type="password" placeholder="Passphrase" autocomplete="off"><button class="btn primary">Unlock</button></div>${pass ? '<p class="err">Wrong passphrase, try again.</p>' : ''}`;
+        const inp = body.querySelector('input');
+        const go = () => openTransfer(T, inp.value);
+        body.querySelector('button').onclick = go;
+        inp.onkeydown = (ev) => { if (ev.key === 'Enter') go(); };
+        inp.focus();
+        return;
+      }
+      body.innerHTML = `<p class="err">Could not open the transfer: ${esc(e.message)}</p>`;
+      return;
+    }
+    T.meta = { f: res.files.map((f) => ({ n: f.name, t: f.type, s: f.data.length, m: f.message ? 1 : 0 })) };
+    T.card.querySelector('.xfer-title').textContent = transferTitle(T);
+    T.card.querySelector('.xfer-sub').textContent = `${fmtBytes(total)} in ${fmtDur(T.doneT - T.startT + P.modes[T.mode].frameSeconds)} · average ${T.avgKbps.toFixed(1)} kbps${res.encrypted ? ' · decrypted' : ''}`;
+    body.innerHTML = '';
+    if (res.verified) body.append(el('div', 'verified', '<svg viewBox="0 0 24 24" width="16" height="16"><path d="M5 12l5 5 9-10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> SHA-256 verified · bit-exact copy'));
+    else body.append(el('p', 'err', 'Integrity check failed: the data may be corrupted.'));
+    const list = el('div', 'xfer-files');
+    for (const f of res.files) {
+      if (f.message) {
+        const text = new TextDecoder().decode(f.data);
+        const box = el('div', 'preview-msg'); box.textContent = text;
+        const acts = el('div', 'acts'); acts.style.marginTop = '8px'; acts.style.display = 'flex'; acts.style.gap = '8px';
+        const cp = el('button', 'btn', 'Copy');
+        cp.onclick = () => { navigator.clipboard.writeText(text).then(() => toast('Copied'), () => toast('Copy failed')); };
+        acts.append(cp);
+        if (/^https?:\/\/\S+$/.test(text.trim())) { const a = el('a', 'btn', 'Open link'); a.href = text.trim(); a.target = '_blank'; a.rel = 'noopener noreferrer'; acts.append(a); }
+        list.append(box, acts);
+        continue;
+      }
+      const type = safeType(f.type);
+      const blob = new Blob([f.data], { type });
+      const url = URL.createObjectURL(blob);
+      T.urls.push(url);
+      const row = el('div', 'rfile');
+      const isImg = /^image\//.test(type);
+      const th = el('div', 'th', isImg ? '' : esc((f.name.split('.').pop() || 'file').slice(0, 4)));
+      if (isImg) { th.style.backgroundImage = `url("${url}")`; th.classList.add('zoomable'); th.onclick = () => openLightbox(url, f.name); th.title = 'View full size'; }
+      const meta = el('div', 'meta', `<div class="nm" style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(f.name)}</div><div class="xfer-sub">${fmtBytes(f.data.length)} · ${esc(type)}</div>`);
+      meta.style.minWidth = '0';
+      const acts = el('div', 'acts');
+      const dl = el('a', 'btn primary', 'Download'); dl.href = url; dl.download = f.name;
+      acts.append(dl);
+      if (navigator.canShare) {
+        try {
+          const file = new File([blob], f.name, { type });
+          if (navigator.canShare({ files: [file] })) {
+            const sh = el('button', 'btn', 'Share');
+            sh.onclick = () => navigator.share({ files: [file] }).catch(() => {});
+            acts.append(sh);
+          }
+        } catch (e) { /* File constructor unsupported */ }
+      }
+      row.append(th, meta, acts);
+      list.append(row);
+      if (isImg && res.files.length <= 3) {
+        const img = el('img', 'preview-img zoomable'); img.src = url; img.alt = f.name; img.title = 'Tap to view full size';
+        img.onclick = () => openLightbox(url, f.name);
+        list.append(img);
+      }
+      if (type === 'application/pdf') { const a = el('a', 'btn', 'Open PDF'); a.href = url; a.target = '_blank'; a.rel = 'noopener'; acts.prepend(a); }
+    }
+    body.append(list);
+    updateXferBar();
+    const tg = T.card.querySelector('.xfer-toggle');
+    tg.hidden = false; tg.textContent = T.card.classList.contains('compact') ? 'Show' : 'Hide';
+    // Bring the finished files into view only if they are below the screen; the monitor stays put otherwise.
+    const rect = T.card.getBoundingClientRect();
+    if (rect.top > window.innerHeight - 160) T.card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    toast('Transfer complete ✓');
+    if (navigator.vibrate) try { navigator.vibrate([60, 40, 60]); } catch (e) { /* ignore */ }
+  }
+
+  // ---- full-screen image viewer ----
+  const lb = { open: false, pushed: false };
+  function openLightbox(url, name) {
+    const box = $('lightbox'), img = $('lbImg');
+    img.src = url; img.alt = name;
+    box.classList.remove('zoomed');
+    $('lbName').textContent = name;
+    $('lbDl').href = url; $('lbDl').download = name;
+    box.hidden = false; lb.open = true;
+    document.body.style.overflow = 'hidden';
+    try { history.pushState({ lightbox: 1 }, ''); lb.pushed = true; } catch (e) { lb.pushed = false; }
+  }
+  function closeLightbox(fromHistory) {
+    if (!lb.open) return;
+    lb.open = false;
+    $('lightbox').hidden = true;
+    $('lbImg').removeAttribute('src');
+    document.body.style.overflow = '';
+    if (!fromHistory && lb.pushed) { lb.pushed = false; history.back(); }
+    lb.pushed = false;
+  }
+  $('lbClose').onclick = () => closeLightbox();
+  $('lightbox').onclick = (e) => { if (e.target === $('lightbox') || e.target === $('lbScroll')) closeLightbox(); };
+  // Tap/click toggles between fit-to-screen and full resolution (scroll to pan).
+  $('lbImg').onclick = (e) => {
+    const box = $('lightbox'), img = $('lbImg'), sc = $('lbScroll');
+    const r = img.getBoundingClientRect();
+    const fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
+    box.classList.toggle('zoomed');
+    if (box.classList.contains('zoomed')) {
+      sc.scrollLeft = fx * img.naturalWidth - sc.clientWidth / 2;
+      sc.scrollTop = fy * img.naturalHeight - sc.clientHeight / 2;
+    }
+  };
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lb.open) closeLightbox(); });
+  window.addEventListener('popstate', () => { if (lb.open) closeLightbox(true); });
+
+  // ---- speed test (measuring side) ----
+  handlers['rx-test'] = (m) => {
+    if (!recv.active || !(m.step >= 0 && m.step < P.modes.length)) return;
+    frameStats(m);
+    const s = m.stats, mode = P.modes[s.mode];
+    if (!recv.test || recv.test.session !== m.session) {
+      recv.test = { session: m.session, rows: P.modes.map(() => ({ ok: 0, total: 0, frames: 0, snr: [] })), maxStep: -1 };
+      $('testCard').hidden = false;
+      $('testCard').open = true;
+      $('testReco').hidden = true;
+    }
+    const tt = recv.test;
+    const row = tt.rows[m.step];
+    row.ok += s.ok; row.total += s.total; row.frames++; row.snr.push(s.snr);
+    tt.maxStep = Math.max(tt.maxStep, m.step);
+    pushSpeed(m.t, s.ok * mode.blockSize);
+    renderTest(m.step);
+    clearTimeout(tt.timer);
+    tt.timer = setTimeout(() => finishTest(), (mode.frameSeconds * 2 + 1.5) * 1000);
+    if (m.step === m.steps - 1 && row.frames >= 2) finishTest();
+  };
+
+  function renderTest(curStep) {
+    const tt = recv.test, box = $('testTable');
+    box.innerHTML = '';
+    if (!tt.final) $('testProg').textContent = `measuring ${P.modes[curStep] ? P.modes[curStep].name : ''}…`;
+    P.modes.forEach((m, i) => {
+      const r = tt.rows[i];
+      const seen = r.frames > 0, missed = !seen && i < tt.maxStep;
+      const ratio = r.total ? r.ok / r.total : 0;
+      const cls = !seen ? (missed || tt.final ? ' fail' : '') : ratio >= 0.999 ? '' : ratio > 0 ? ' part' : ' fail';
+      const snr = r.snr.length ? (r.snr.reduce((a, b) => a + b, 0) / r.snr.length).toFixed(0) + ' dB' : '';
+      const status = !seen ? (missed || tt.final ? 'no signal' : '…') : ratio >= 0.999 ? `✓ ${m.kbps.toFixed(0)} kbps` : ratio > 0 ? `${(ratio * 100).toFixed(0)}% → ~${(m.kbps * ratio).toFixed(0)} kbps` : '✗ failed';
+      const rowEl = el('div', 'trow' + cls + (i === curStep && !tt.final ? ' cur' : ''),
+        `<span class="tn">${m.name}</span><span class="tk">${m.kbps.toFixed(m.kbps < 10 ? 1 : 0)} kbps</span>` +
+        `<span class="tbar"><i style="width:${seen ? Math.max(4, ratio * 100) : 0}%"></i></span><span class="ts">${status}${snr ? ' · ' + snr : ''}</span>`);
+      box.append(rowEl);
+    });
+  }
+
+  function finishTest() {
+    const tt = recv.test; if (!tt || tt.final) return;
+    tt.final = true;
+    clearTimeout(tt.timer);
+    // Fountain coding turns partial success into speed: pick the highest delivered rate
+    // (nominal x success), counting only modes that got at least half their codewords through.
+    let best = -1, bestRate = 0;
+    tt.rows.forEach((r, i) => {
+      const ratio = r.total ? r.ok / r.total : 0, rate = P.modes[i].kbps * ratio;
+      if (ratio >= 0.5 && rate > bestRate * 1.05) { best = i; bestRate = rate; }
+    });
+    renderTest(-1);
+    const box = $('testReco'); box.hidden = false;
+    if (best < 0) {
+      box.innerHTML = 'No speed got through reliably. Move the devices closer, raise the sender volume and try again in a quieter spot.';
+      $('testProg').textContent = 'no speed got through';
+      return;
+    }
+    const m = P.modes[best];
+    const r = tt.rows[best];
+    // Fold to a one-line summary so the live monitor and files stay in view.
+    $('testProg').innerHTML = `best: <b>${m.name}</b> · ~${bestRate.toFixed(0)} kbps`;
+    $('testCard').open = false;
+    const safe = r.ok < r.total && best > 0 ? P.modes[best - 1] : null;
+    LS.set('reco', best);
+    box.innerHTML = `Best speed for this link: <b>${m.name}</b> (${m.mod}), delivering about <b>${bestRate.toFixed(0)} kbps</b>. Select it on the <b>sending</b> device.` +
+      (safe && r.ok / r.total < 0.8 ? ` If it struggles, use <b>${safe.name}</b>, or keep both devices still.` : '') +
+      `<br><span class="muted small">A 1 MB file would take about ${fmtDur((1048576 * 8) / (bestRate * 1000))} at this speed.</span>`;
+  }
+
+  // ---------------- boot ----------------
+  if (location.protocol === 'http:' && !/^(localhost|127\.|\[::1\])/.test(location.hostname)) {
+    $('rxErr').textContent = 'Heads up: browsers only allow the microphone on https:// pages or localhost. Sending works here, but to receive, open the https version.';
+    $('rxErr').hidden = false;
+  }
+  route();
+  if ('serviceWorker' in navigator && location.protocol === 'https:' && window.SD_BUNDLE) {
+    navigator.serviceWorker.register('sw.js').catch(() => { /* optional */ });
+  }
+})();
+
+</script>
+</body>
+</html>
